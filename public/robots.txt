@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+
+# Disallow admin areas
+Disallow: /admin/
+Disallow: /dashboard
+Disallow: /login
+Disallow: /register
+Disallow: /cart
+Disallow: /checkout
+Disallow: /transaction-history
+
+# Allow important public pages
+Allow: /products
+Allow: /categories
+Allow: /testimonials
+
+# Sitemap
+Sitemap: https://seblakumi.com/sitemap.xml

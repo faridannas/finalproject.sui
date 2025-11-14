@@ -1,0 +1,84 @@
+/* Custom styles for Seblak Umi */
+
+/* Product Card */
+.product-card {
+    @apply bg-white rounded-lg shadow-lg overflow-hidden transition-shadow duration-300;
+}
+
+.product-card:hover {
+    @apply shadow-xl;
+}
+
+.product-title {
+    @apply text-xl font-semibold text-gray-900 mb-1;
+}
+
+.product-price {
+    @apply text-lg font-bold text-primary;
+}
+
+/* Category Card */
+.category-card {
+    @apply relative overflow-hidden rounded-xl shadow-lg;
+}
+
+.category-overlay {
+    @apply absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent opacity-0 transition-opacity duration-300;
+}
+
+.category-card:hover .category-overlay {
+    @apply opacity-100;
+}
+
+/* Hero Section */
+.hero-text {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Custom Button */
+.btn-seblak {
+    @apply bg-primary text-white px-8 py-3 rounded-lg hover:bg-primary/90 transition transform hover:scale-105 font-semibold;
+}
+
+/* Custom Navigation */
+.nav-link {
+    @apply hover:text-primary transition-colors;
+}
+
+.nav-link.active {
+    @apply text-primary;
+}
+
+/* Search Input */
+.search-input {
+    @apply w-full py-2 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent;
+}
+
+/* Animation Classes */
+.animate-fade-in {
+    animation: fadeIn 0.6s ease-in;
+}
+
+.animate-slide-up {
+    animation: slideUp 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

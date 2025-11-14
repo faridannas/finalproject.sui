@@ -1,0 +1,2 @@
+- [x] Remove manual Hash::make from register.blade.php to prevent double hashing
+- [x] Test user registration and login to confirm the fix

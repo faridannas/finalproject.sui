@@ -1,18 +1,24 @@
-u003cnav class="bg-seblak-700 shadow-xl"u003e
-    u003cdiv class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"u003e
-        u003cdiv class="flex justify-between h-16 items-center"u003e
-            u003cdiv class="flex items-center"u003e
-                u003c!-- Logo --u003e
-                u003cdiv class="flex-shrink-0"u003e
-                    u003cx-application-logo class="block h-10 w-auto text-white" /u003e
-                u003c/divu003e
-                u003c!-- Navigation Links --u003e
-                u003cdiv class="hidden sm:ml-6 sm:flex sm:space-x-8"u003e
-                    u003cx-nav-link :href="route('dashboard')" :active="request()-\u003erouteIs('dashboard')" class="text-white hover:bg-seblak-600 px-3 py-2 rounded-md"u003e
+<nav class="bg-seblak-700 shadow-xl">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16 items-center">
+            <div class="flex items-center">
+                <!-- Logo -->
+                <div class="flex-shrink-0">
+                    <x-application-logo class="block h-10 w-auto text-white" />
+                </div>
+                <!-- Navigation Links -->
+                <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-white hover:bg-seblak-600 px-3 py-2 rounded-md">
                         {{ __('dashboard') }}
-                    u003c/x-nav-linku003e
-                u003c/divu003e
-            u003c/divu003e
-        u003c/divu003e
-    u003c/divu003e
-u003c/navu003e
+                    </x-nav-link>
+                    <x-nav-link :href="route('products.index')" :active="request()->routeIs('products.*')" class="text-white hover:bg-seblak-600 px-3 py-2 rounded-md">
+                        {{ __('Products') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('orders.index')" :active="request()->routeIs('orders.*')" class="text-white hover:bg-seblak-600 px-3 py-2 rounded-md">
+                        {{ __('My Orders') }}
+                    </x-nav-link>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>

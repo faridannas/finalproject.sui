@@ -46,7 +46,7 @@ class DatabaseSeeder extends Seeder
         // Membuat produk dengan gambar yang lebih spesifik dan real
         $products = [
             [
-                'category_id' => 1,
+                'category_id' => 2,
                 'name' => 'Seblak Kuah Original',
                 'price' => 25000,
                 'stock' => 50,
@@ -54,7 +54,7 @@ class DatabaseSeeder extends Seeder
                 'image' => 'products/seblak-kuah-original.svg'
             ],
             [
-                'category_id' => 1,
+                'category_id' => 2,
                 'name' => 'Seblak Kuah Seafood',
                 'price' => 30000,
                 'stock' => 40,
@@ -62,7 +62,7 @@ class DatabaseSeeder extends Seeder
                 'image' => 'products/seblak-kuah-seafood.svg'
             ],
             [
-                'category_id' => 1,
+                'category_id' => 2,
                 'name' => 'Seblak Kuah Komplit',
                 'price' => 35000,
                 'stock' => 45,
@@ -70,7 +70,7 @@ class DatabaseSeeder extends Seeder
                 'image' => 'products/seblak-kuah-komplit.svg'
             ],
             [
-                'category_id' => 2,
+                'category_id' => 3,
                 'name' => 'Seblak Kering Pedas',
                 'price' => 20000,
                 'stock' => 60,
@@ -78,7 +78,7 @@ class DatabaseSeeder extends Seeder
                 'image' => 'products/seblak-kering-pedas.svg'
             ],
             [
-                'category_id' => 2,
+                'category_id' => 3,
                 'name' => 'Seblak Kering Manis',
                 'price' => 22000,
                 'stock' => 55,
@@ -86,7 +86,7 @@ class DatabaseSeeder extends Seeder
                 'image' => 'products/seblak-kering-manis.svg'
             ],
             [
-                'category_id' => 3,
+                'category_id' => 4,
                 'name' => 'Seblak Level 1 - Pemula',
                 'price' => 22000,
                 'stock' => 45,
@@ -94,7 +94,7 @@ class DatabaseSeeder extends Seeder
                 'image' => 'products/seblak-level1.jpg'
             ],
             [
-                'category_id' => 4,
+                'category_id' => 5,
                 'name' => 'Seblak Level 2 - Menengah',
                 'price' => 23000,
                 'stock' => 50,
@@ -102,7 +102,7 @@ class DatabaseSeeder extends Seeder
                 'image' => 'products/seblak-level2.jpg'
             ],
             [
-                'category_id' => 5,
+                'category_id' => 6,
                 'name' => 'Seblak Level 3 - Pedas',
                 'price' => 24000,
                 'stock' => 40,
@@ -110,7 +110,7 @@ class DatabaseSeeder extends Seeder
                 'image' => 'products/seblak-level3.jpg'
             ],
             [
-                'category_id' => 6,
+                'category_id' => 7,
                 'name' => 'Seblak Level 4 - Super Pedas',
                 'price' => 25000,
                 'stock' => 35,

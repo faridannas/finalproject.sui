@@ -37,7 +37,7 @@ new #[Layout('layouts.guest')] class extends Component
 <div class="min-h-screen flex items-center justify-center">
     <div class="auth-card w-full max-w-md">
         <a href="/" class="flex justify-center mb-6">
-            <span class="text-4xl">🍲</span>
+            <img src="{{ asset('images/logoseblak.jpeg') }}" alt="Seblak Umi AI Logo" class="h-16 w-16 object-contain rounded-lg">
         </a>
         <h1 class="auth-title">Create Your Account</h1>
         <p class="auth-subtitle">Join the Seblak UMI family and start ordering!</p>

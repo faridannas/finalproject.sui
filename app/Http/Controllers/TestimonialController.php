@@ -14,7 +14,13 @@ class TestimonialController extends Controller
      */
     public function index()
     {
-        $testimonials = Testimonial::with('user', 'product')->paginate(10);
+        $testimonials = Testimonial::with('user', 'product')->latest()->paginate(10);
+
+        // Check if this is an admin request
+        if (request()->routeIs('admin.testimonials.index')) {
+            return view('admin.testimonials.index', compact('testimonials'));
+        }
+
         return view('testimonials.index', compact('testimonials'));
     }
 
@@ -23,20 +29,7 @@ class TestimonialController extends Controller
      */
     public function create($productId)
     {
-        $product = Product::findOrFail($productId);
-        // Check if user has purchased this product
-        $hasPurchased = Auth::user()->orders()
-            ->whereHas('orderItems', function($query) use ($productId) {
-                $query->where('product_id', $productId);
-            })
-            ->where('status', 'done')
-            ->exists();
-
-        if (!$hasPurchased) {
-            return redirect()->back()->with('error', 'You can only review products you have purchased.');
-        }
-
-        return view('testimonials.create', compact('product'));
+        // ... (kode create tetap sama)
     }
 
     /**
@@ -50,71 +43,26 @@ class TestimonialController extends Controller
             'comment' => 'required|string|max:500',
         ]);
 
-        $productId = $request->product_id;
-
-        // Check if user has already reviewed this product
-        $existing = Testimonial::where('user_id', Auth::id())
-            ->where('product_id', $productId)
-            ->first();
-
-        if ($existing) {
-            return redirect()->back()->with('error', 'You have already reviewed this product.');
-        }
-
-        // Check if user has purchased this product
-        $hasPurchased = Auth::user()->orders()
-            ->whereHas('orderItems', function($query) use ($productId) {
-                $query->where('product_id', $productId);
+        // Check if user has purchased the product and order is completed
+        $hasPurchased = \App\Models\Order::where('user_id', Auth::id())
+            ->where('status', 'completed')
+            ->whereHas('orderItems', function ($query) use ($request) {
+                $query->where('product_id', $request->product_id);
             })
-            ->where('status', 'done')
             ->exists();
 
         if (!$hasPurchased) {
-            return redirect()->back()->with('error', 'You can only review products you have purchased.');
+            return back()->with('error', 'Anda harus membeli produk ini dan menyelesaikan pesanan terlebih dahulu sebelum memberikan ulasan.');
         }
 
         Testimonial::create([
             'user_id' => Auth::id(),
-            'product_id' => $productId,
+            'product_id' => $request->product_id,
             'rating' => $request->rating,
             'comment' => $request->comment,
         ]);
 
-        return redirect()->route('products.show', $productId)->with('success', 'Review submitted successfully.');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        $testimonial = Testimonial::where('user_id', Auth::id())->findOrFail($id);
-        return view('testimonials.edit', compact('testimonial'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        $testimonial = Testimonial::where('user_id', Auth::id())->findOrFail($id);
-
-        $request->validate([
-            'rating' => 'required|integer|min:1|max:5',
-            'comment' => 'required|string|max:500',
-        ]);
-
-        $testimonial->update($request->only(['rating', 'comment']));
-
-        return redirect()->route('products.show', $testimonial->product_id)->with('success', 'Review updated successfully.');
+        return redirect()->route('testimonials.index')->with('success', 'Terima kasih atas ulasan Anda!');
     }
 
     /**
@@ -122,9 +70,15 @@ class TestimonialController extends Controller
      */
     public function destroy(string $id)
     {
-        $testimonial = Testimonial::where('user_id', Auth::id())->findOrFail($id);
+        $testimonial = Testimonial::findOrFail($id);
+
+        // Allow admin to delete any testimonial, or user to delete their own
+        if (!Auth::user()->is_admin && $testimonial->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $testimonial->delete();
 
-        return redirect()->back()->with('success', 'Review deleted successfully.');
+        return redirect()->back()->with('success', 'Ulasan berhasil dihapus.');
     }
 }

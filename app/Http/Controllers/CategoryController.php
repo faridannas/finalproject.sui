@@ -13,6 +13,12 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::withCount('products')->paginate(10);
+
+        // Check if this is an admin request
+        if (request()->routeIs('admin.categories.index')) {
+            return view('admin.categories.index', compact('categories'));
+        }
+
         return view('categories.index', compact('categories'));
     }
 

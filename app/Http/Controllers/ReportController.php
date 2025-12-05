@@ -28,6 +28,10 @@ class ReportController extends Controller
                 $query->whereDate('created_at', '<=', Carbon::parse($request->end_date));
             }
 
+            if ($request->filled('date')) {
+                $query->whereDate('created_at', $request->date);
+            }
+
             $orders = $query->orderBy('created_at', 'desc')->get();
 
             if ($orders->isEmpty()) {

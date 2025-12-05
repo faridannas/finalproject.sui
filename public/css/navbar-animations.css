@@ -1,0 +1,239 @@
+/* ========================================
+   NAVBAR ANIMATIONS & OPTIMIZATIONS
+   ======================================== */
+
+/* Smooth Page Transitions */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    transition: opacity 0.2s ease-in-out;
+}
+
+/* Loading Indicator */
+.page-loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #ea580c, #dc2626, #ea580c);
+    background-size: 200% 100%;
+    animation: loading-bar 1.5s ease-in-out infinite;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.page-loading.active {
+    opacity: 1;
+}
+
+@keyframes loading-bar {
+    0% {
+        background-position: 0% 0;
+    }
+
+    50% {
+        background-position: 100% 0;
+    }
+
+    100% {
+        background-position: 0% 0;
+    }
+}
+
+/* Mobile Menu Animations - ULTRA FAST */
+.mobile-menu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.1s ease-out, opacity 0.1s ease-out;
+    opacity: 0;
+}
+
+.mobile-menu.active {
+    max-height: 600px;
+    opacity: 1;
+}
+
+/* Hamburger Icon Animation - INSTANT */
+.hamburger {
+    display: inline-block;
+    cursor: pointer;
+    transition: none;
+}
+
+.hamburger:active {
+    transform: scale(0.95);
+}
+
+.hamburger svg {
+    transition: transform 0.1s ease-out;
+}
+
+.hamburger.active svg {
+    transform: rotate(90deg);
+}
+
+/* Navbar Items - NO ANIMATION */
+.mobile-menu-item {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Navbar Sticky Animation */
+.navbar-sticky {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.navbar-sticky.scrolled {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
+}
+
+/* Link Hover Effects */
+.nav-link {
+    position: relative;
+    transition: color 0.2s ease-in-out;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #ea580c, #dc2626);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 100%;
+    left: 0;
+}
+
+/* Cart Badge Pulse */
+.cart-badge {
+    animation: badge-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes badge-pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+/* Button Ripple Effect */
+.btn-ripple {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-ripple::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn-ripple:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* Mobile Optimization */
+@media (max-width: 768px) {
+    .navbar-sticky {
+        padding: 0.5rem 0;
+    }
+
+    .mobile-menu {
+        background: linear-gradient(135deg,
+                rgba(15, 23, 42, 0.98) 0%,
+                rgba(194, 65, 12, 0.95) 100%);
+        backdrop-filter: blur(20px);
+    }
+}
+
+/* Performance: GPU Acceleration */
+.hw-accelerated {
+    transform: translateZ(0);
+    will-change: transform;
+}
+
+/* Smooth Scroll */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Reduce Motion for Accessibility */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Loading Skeleton */
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Fade In Animation for Page Load */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* Optimized Shadow */
+.shadow-optimized {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.shadow-optimized:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}

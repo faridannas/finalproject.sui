@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-admin-layout>
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -42,7 +42,7 @@
                                 <div class="p-4">
                                     <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $content->title }}</h3>
                                     <p class="text-sm text-gray-600 mb-2 line-clamp-3">{{ Str::limit($content->body, 100) }}</p>
-                                    <p class="text-xs text-gray-500 mb-4">Created: {{ $content->created_at->format('M d, Y') }}</p>
+                                    <p class="text-xs text-gray-500 mb-4">Created: {{ $content->created_at->format('d/m/Y') }}</p>
                                     <div class="flex justify-between items-center">
                                         <a href="{{ route('admin.contents.edit', $content) }}" class="text-indigo-600 hover:text-indigo-900 text-sm font-medium">Edit</a>
                                         <form method="POST" action="{{ route('admin.contents.destroy', $content) }}" class="inline">
@@ -92,4 +92,4 @@
             });
         });
     </script>
-</x-app-layout>
+</x-admin-layout>

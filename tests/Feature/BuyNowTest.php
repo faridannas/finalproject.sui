@@ -7,12 +7,13 @@ use App\Models\User;
 use App\Models\Product;
 use App\Models\Cart;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Livewire\Livewire;
 
 class BuyNowTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_buy_now_redirects_to_checkout()
+    public function test_buy_now_button_exists_on_product_page()
     {
         $user = User::factory()->create(['role' => 'customer']);
         $product = Product::factory()->create(['stock' => 10]);
@@ -43,14 +44,9 @@ class BuyNowTest extends TestCase
         $this->assertEquals(1, Cart::where('user_id', $user->id)->count());
 
         // Call buyNow method via Livewire
-        $this->actingAs($user)
-            ->call('POST', '/livewire/message/app.livewire.cart-component', [
-                'name' => 'buyNow',
-                'body' => [
-                    'productId' => $product2->id,
-                    'quantity' => 1
-                ]
-            ]);
+        $this->actingAs($user);
+        Livewire::test(\App\Livewire\CartComponent::class)
+            ->call('buyNow', $product2->id, 1);
 
         // Verify cart is cleared and only product2 is in cart
         $cartItems = Cart::where('user_id', $user->id)->get();
@@ -64,16 +60,10 @@ class BuyNowTest extends TestCase
         $user = User::factory()->create(['role' => 'customer']);
         $product = Product::factory()->create(['stock' => 10]);
 
-        $response = $this->actingAs($user)
-            ->call('POST', '/livewire/message/app.livewire.cart-component', [
-                'name' => 'buyNow',
-                'body' => [
-                    'productId' => $product->id,
-                    'quantity' => 1
-                ]
-            ]);
-
-        $response->assertRedirect(route('checkout'));
+        $this->actingAs($user);
+        Livewire::test(\App\Livewire\CartComponent::class)
+            ->call('buyNow', $product->id, 1)
+            ->assertRedirect(route('checkout'));
     }
 
     public function test_buy_now_fails_for_out_of_stock_product()
@@ -81,31 +71,19 @@ class BuyNowTest extends TestCase
         $user = User::factory()->create(['role' => 'customer']);
         $product = Product::factory()->create(['stock' => 0]);
 
-        $response = $this->actingAs($user)
-            ->call('POST', '/livewire/message/app.livewire.cart-component', [
-                'name' => 'buyNow',
-                'body' => [
-                    'productId' => $product->id,
-                    'quantity' => 1
-                ]
-            ]);
-
-        $response->assertRedirect();
-        $response->assertSessionHas('error', 'Product not available or insufficient stock.');
+        $this->actingAs($user);
+        Livewire::test(\App\Livewire\CartComponent::class)
+            ->call('buyNow', $product->id, 1)
+            ->assertRedirect()
+            ->assertSessionHas('error', 'Product not available or insufficient stock.');
     }
 
     public function test_buy_now_requires_authentication()
     {
         $product = Product::factory()->create(['stock' => 10]);
 
-        $response = $this->call('POST', '/livewire/message/app.livewire.cart-component', [
-            'name' => 'buyNow',
-            'body' => [
-                'productId' => $product->id,
-                'quantity' => 1
-            ]
-        ]);
-
-        $response->assertRedirect(route('login'));
+        Livewire::test(\App\Livewire\CartComponent::class)
+            ->call('buyNow', $product->id, 1)
+            ->assertRedirect(route('login'));
     }
 }

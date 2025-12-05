@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" style="margin: 0; padding: 0; width: 100%; overflow-x: hidden;">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -50,12 +50,15 @@
 
     {{-- Panggil Tailwind & JS lewat Vite --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
 
     {{-- Custom CSS --}}
     <link rel="stylesheet" href="{{ asset('custom/css/custom-auth-enhanced.css') }}">
     <link rel="stylesheet" href="{{ asset('css/additional-styles.css') }}">
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
     <link rel="stylesheet" href="{{ asset('css/hero-styles.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/navbar-animations.css') }}">
+
 
     <!-- Structured Data - Organization -->
     @verbatim
@@ -65,7 +68,7 @@
     "@type": "Organization",
     "name": "Seblak UMI",
     "url": "{{ url('/') }}",
-    "logo": "{{ asset('images/seblak-umi-logo.png') }}",
+    "logo": "{{ asset('images/logoseblak.jpeg') }}",
     "description": "Seblak premium autentik & pedas dari Seblak UMI! Rasakan sensasi pedas yang bikin nagih dengan bahan premium.",
     "address": {
         "@type": "PostalAddress",
@@ -88,7 +91,9 @@
 
 </head>
 
-<body class="antialiased text-gray-900 bg-gradient-to-b from-orange-50 to-yellow-100">
+<body class="antialiased text-gray-900" style="margin: 0; padding: 0; width: 100%; overflow-x: hidden;">
+    <!-- Background wrapper -->
+    <div class="fixed inset-0 bg-gradient-to-b from-orange-50 to-yellow-100 -z-10"></div>
 
     {{-- Notifikasi sukses --}}
     @if (session('success'))
@@ -131,6 +136,10 @@
             });
         }, 3000);
     </script>
+
+    {{-- Navbar JavaScript --}}
+    <script src="{{ asset('js/navbar-optimized.js') }}" defer></script>
+
+    @livewireScripts
 </body>
 </html>
- 

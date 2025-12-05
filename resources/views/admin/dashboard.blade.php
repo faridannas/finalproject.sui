@@ -1,374 +1,416 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+<x-admin-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Admin Dashboard') }}
+        </h2>
+    </x-slot>
 
-    <title>{{ config('app.name', 'Laravel') }} - Admin Dashboard</title>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <!-- Statistics Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <!-- Total Orders Card -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center hover:shadow-md transition-shadow">
+                    <div class="p-3 rounded-full bg-orange-50 text-orange-600 mr-4">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Total Orders</p>
+                        <h4 class="text-2xl font-bold text-gray-900" id="total-orders">{{ $totalOrders }}</h4>
+                        <p class="text-xs text-orange-600 mt-1 font-medium">+{{ \App\Models\Order::where('created_at', '>=', now()->startOfWeek())->count() }} minggu ini</p>
+                    </div>
+                </div>
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+                <!-- Products Card -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center hover:shadow-md transition-shadow">
+                    <div class="p-3 rounded-full bg-blue-50 text-blue-600 mr-4">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Active Products</p>
+                        <h4 class="text-2xl font-bold text-gray-900">{{ \App\Models\Product::count() }}</h4>
+                        <p class="text-xs text-blue-600 mt-1 font-medium">{{ \App\Models\Product::where('stock', '>', 0)->count() }} ready stock</p>
+                    </div>
+                </div>
 
-    <!-- Chart.js and plugins -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
-
-    <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @livewireStyles
-</head>
-<body class="font-sans antialiased">
-    <div class="min-h-screen bg-gray-100">
-        @include('layouts.admin-navigation')
-
-        <!-- Page Heading -->
-        <header class="bg-white shadow">
-            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                    {{ __('Admin Dashboard') }}
-                </h2>
+                <!-- Revenue Card -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center hover:shadow-md transition-shadow">
+                    <div class="p-3 rounded-full bg-emerald-50 text-emerald-600 mr-4">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Total Revenue</p>
+                        <h4 class="text-2xl font-bold text-gray-900" id="total-revenue">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</h4>
+                        <p class="text-xs text-emerald-600 mt-1 font-medium">+Rp {{ number_format(\App\Models\Order::where('status', 'completed')->where('created_at', '>=', now()->startOfWeek())->sum('total_price'), 0, ',', '.') }} minggu ini</p>
+                    </div>
+                </div>
             </div>
-        </header>
-
-        <!-- Page Content -->
-        <main>
-            <div class="py-12">
-                <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <!-- Statistics Cards -->
-                        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                            <div class="p-6">
-                                <h3 class="text-lg font-semibold text-gray-900 mb-4">Overview Statistics</h3>
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <!-- Orders Stats -->
-                                    <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg p-4 text-white">
-                                        <div class="flex items-center justify-between">
-                                            <div>
-                                                <p class="text-sm opacity-80">Total Orders</p>
-                                                <h4 class="text-2xl font-bold">{{ App\Models\Order::count() }}</h4>
-                                            </div>
-                                            <div class="text-3xl">📦</div>
-                                        </div>
-                                        @php
-                                            $orderGrowth = App\Models\Order::whereBetween('created_at', [now()->subWeek(), now()])->count();
-                                        @endphp
-                                        <p class="text-sm mt-2">
-                                            <span class="opacity-80">This Week: </span>
-                                            <span class="font-semibold">{{ $orderGrowth }}</span>
-                                        </p>
-                                    </div>
-
-                                    <!-- Products Stats -->
-                                    <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-lg p-4 text-white">
-                                        <div class="flex items-center justify-between">
-                                            <div>
-                                                <p class="text-sm opacity-80">Products</p>
-                                                <h4 class="text-2xl font-bold">{{ App\Models\Product::count() }}</h4>
-                                            </div>
-                                            <div class="text-3xl">🍜</div>
-                                        </div>
-                                        <p class="text-sm mt-2">
-                                            <span class="opacity-80">Active: </span>
-                                            <span class="font-semibold">{{ App\Models\Product::where('stock', '>', 0)->count() }}</span>
-                                        </p>
-                                    </div>
-
-                                    <!-- Revenue Stats -->
-                                    <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg p-4 text-white">
-                                        <div class="flex items-center justify-between">
-                                            <div>
-                                                <p class="text-sm opacity-80">Revenue</p>
-                                                <h4 class="text-2xl font-bold">
-                                                    {{ 'Rp ' . number_format(App\Models\Order::where('status', 'completed')->sum('total_price'), 0, ',', '.') }}
-                                                </h4>
-                                            </div>
-                                            <div class="text-3xl">💰</div>
-                                        </div>
-                                        @php
-                                            $weeklyRevenue = App\Models\Order::where('status', 'completed')
-                                                ->whereBetween('created_at', [now()->subWeek(), now()])
-                                                ->sum('total_price');
-                                        @endphp
-                                        <p class="text-sm mt-2">
-                                            <span class="opacity-80">This Week: </span>
-                                            <span class="font-semibold">{{ 'Rp ' . number_format($weeklyRevenue, 0, ',', '.') }}</span>
-                                        </p>
-                                    </div>
-                                </div>
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <!-- Sales Trend Chart -->
+                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-semibold text-gray-900">Tren Penjualan</h3>
+                                <span class="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-full">14 Hari Terakhir</span>
                             </div>
-                        </div>
-
-                        <!-- Line Chart -->
-                        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg lg:col-span-2">
-                            <div class="p-6">
-                                <h3 class="text-lg font-semibold text-gray-900 mb-4">Orders and Revenue Trends</h3>
-                                <div style="height: 400px;">
-                                    <canvas id="orderChart" class="w-full h-full"></canvas>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Recent Orders Table -->
-                        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg lg:col-span-2">
-                            <div class="p-6">
-                                <div class="flex justify-between items-center mb-4">
-                                    <h3 class="text-lg font-semibold text-gray-900">Recent Orders</h3>
-                                    <a href="{{ route('admin.orders.index') }}" class="text-orange-600 hover:text-orange-700 text-sm font-medium">
-                                        View All →
-                                    </a>
-                                </div>
-                                <div class="overflow-x-auto">
-                                    <table class="min-w-full divide-y divide-gray-200">
-                                        <thead class="bg-gray-50">
-                                            <tr>
-                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
-                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="bg-white divide-y divide-gray-200">
-                                            @foreach(App\Models\Order::with('user')->latest()->take(5)->get() as $order)
-                                                <tr class="hover:bg-gray-50">
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                        #{{ $order->id }}
-                                                    </td>
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                        {{ $order->user->name }}
-                                                    </td>
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                        Rp {{ number_format($order->total_price, 0, ',', '.') }}
-                                                    </td>
-                                                    <td class="px-6 py-4 whitespace-nowrap">
-                                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                                            @if($order->status === 'completed') bg-green-100 text-green-800
-                                                            @elseif($order->status === 'pending') bg-yellow-100 text-yellow-800
-                                                            @else bg-gray-100 text-gray-800 @endif">
-                                                            {{ ucfirst($order->status) }}
-                                                        </span>
-                                                    </td>
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                        {{ $order->created_at->format('d M Y H:i') }}
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
+                            <div class="relative" style="height: 350px;">
+                                <canvas id="orderChart"></canvas>
                             </div>
                         </div>
                     </div>
 
-                    @php
-                        $orderData = App\Models\Order::selectRaw('DATE(created_at) as date, COUNT(*) as count, SUM(total_price) as revenue')
-                            ->where('created_at', '>=', now()->subDays(14))
-                            ->groupBy('date')
-                            ->orderBy('date')
-                            ->get();
+                    <!-- Top Selling Products Chart -->
+                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-semibold text-gray-900">Top 5 Menu Favorit</h3>
+                                <span class="text-xs font-medium text-orange-600 bg-orange-50 px-2 py-1 rounded-full">Paling Laris</span>
+                            </div>
+                            <div class="relative" style="height: 350px;">
+                                <canvas id="topProductsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                        $dates = $orderData->pluck('date');
-                        $counts = $orderData->pluck('count');
-                        $revenues = $orderData->pluck('revenue');
-                    @endphp
+                <!-- Recent Orders Table -->
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg lg:col-span-2">
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-semibold text-gray-900">Recent Orders</h3>
+                            <a href="{{ route('admin.orders.index') }}" class="text-orange-600 hover:text-orange-700 text-sm font-medium">
+                                View All →
+                            </a>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200" id="recent-orders">
+                                    @foreach(App\Models\Order::with('user')->latest()->take(5)->get() as $order)
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                #{{ $order->id }}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {{ $order->user->name }}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                Rp {{ number_format($order->total_price, 0, ',', '.') }}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                                                    @if($order->status === 'completed') bg-green-100 text-green-800
+                                                    @elseif($order->status === 'pending') bg-yellow-100 text-yellow-800
+                                                    @else bg-gray-100 text-gray-800 @endif">
+                                                    {{ ucfirst($order->status) }}
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {{ $order->created_at->format('d/m/Y H:i') }}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
 
-                    <script>
-                        // Create the chart when the page loads
-                        document.addEventListener('DOMContentLoaded', function() {
-                            const ctx = document.getElementById('orderChart').getContext('2d');
-                            new Chart(ctx, {
-                                type: 'line',
-                                data: {
-                                    labels: @json($dates),
-                                    datasets: [
-                                        {
-                                            label: 'Number of Orders',
-                                            data: @json($counts),
-                                            borderColor: 'rgba(249, 115, 22, 1)',
-                                            backgroundColor: (context) => {
-                                                const chart = context.chart;
-                                                const {ctx, chartArea} = chart;
-                                                if (!chartArea) return null;
-                                                const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-                                                gradient.addColorStop(0, 'rgba(249, 115, 22, 0)');
-                                                gradient.addColorStop(1, 'rgba(249, 115, 22, 0.2)');
-                                                return gradient;
-                                            },
-                                            borderWidth: 3,
-                                            fill: true,
-                                            tension: 0.4,
-                                            yAxisID: 'y',
-                                            pointBackgroundColor: 'rgba(249, 115, 22, 1)',
-                                            pointBorderColor: 'rgba(255, 255, 255, 1)',
-                                            pointBorderWidth: 2,
-                                            pointRadius: 4,
-                                            pointHoverRadius: 6,
-                                        },
-                                        {
-                                            label: 'Revenue (Rp)',
-                                            data: @json($revenues),
-                                            borderColor: 'rgba(234, 88, 12, 1)',
-                                            backgroundColor: (context) => {
-                                                const chart = context.chart;
-                                                const {ctx, chartArea} = chart;
-                                                if (!chartArea) return null;
-                                                const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-                                                gradient.addColorStop(0, 'rgba(234, 88, 12, 0)');
-                                                gradient.addColorStop(1, 'rgba(234, 88, 12, 0.2)');
-                                                return gradient;
-                                            },
-                                            borderWidth: 3,
-                                            fill: true,
-                                            tension: 0.4,
-                                            yAxisID: 'y1',
-                                            pointBackgroundColor: 'rgba(234, 88, 12, 1)',
-                                            pointBorderColor: 'rgba(255, 255, 255, 1)',
-                                            pointBorderWidth: 2,
-                                            pointRadius: 4,
-                                            pointHoverRadius: 6,
-                                        }
-                                    ]
-                                },
-                                options: {
-                                    responsive: true,
-                                    maintainAspectRatio: false,
-                                    interaction: {
-                                        intersect: false,
-                                        mode: 'index',
-                                    },
-                                    plugins: {
-                                        legend: {
-                                            position: 'top',
-                                            labels: {
-                                                usePointStyle: true,
-                                                padding: 20,
-                                                font: {
-                                                    size: 13
-                                                }
-                                            }
-                                        },
-                                        tooltip: {
-                                            callbacks: {
-                                                label: function(context) {
-                                                    let label = context.dataset.label || '';
-                                                    if (label) {
-                                                        label += ': ';
-                                                    }
-                                                    if (context.datasetIndex === 1) {
-                                                        // Format revenue as currency
-                                                        label += new Intl.NumberFormat('id-ID', {
-                                                            style: 'currency',
-                                                            currency: 'IDR'
-                                                        }).format(context.raw);
-                                                    } else {
-                                                        label += context.raw;
-                                                    }
-                                                    return label;
-                                                }
-                                            }
-                                        }
-                                    },
-                                    scales: {
-                                        x: {
-                                            grid: {
-                                                display: false,
-                                                drawBorder: false,
-                                            },
-                                            type: 'time',
-                                            time: {
-                                                unit: 'day',
-                                                displayFormats: {
-                                                    day: 'MMM d'
-                                                }
-                                            },
-                                            title: {
-                                                display: true,
-                                                text: 'Date',
-                                                font: {
-                                                    size: 13,
-                                                    family: "'Figtree', sans-serif"
-                                                }
-                                            },
-                                            ticks: {
-                                                font: {
-                                                    size: 12,
-                                                    family: "'Figtree', sans-serif"
-                                                },
-                                                color: '#6B7280'
-                                            }
-                                        },
-                                        y: {
-                                            type: 'linear',
-                                            display: true,
-                                            position: 'left',
-                                            title: {
-                                                display: true,
-                                                text: 'Number of Orders',
-                                                font: {
-                                                    size: 13,
-                                                    family: "'Figtree', sans-serif"
-                                                }
-                                            },
-                                            grid: {
-                                                borderDash: [4, 4],
-                                                color: '#E5E7EB',
-                                                drawBorder: false
-                                            },
-                                            ticks: {
-                                                font: {
-                                                    size: 12,
-                                                    family: "'Figtree', sans-serif"
-                                                },
-                                                color: '#6B7280',
-                                                padding: 8
-                                            },
-                                            beginAtZero: true
-                                        },
-                                        y1: {
-                                            type: 'linear',
-                                            display: true,
-                                            position: 'right',
-                                            title: {
-                                                display: true,
-                                                text: 'Revenue (Rp)',
-                                                font: {
-                                                    size: 13,
-                                                    family: "'Figtree', sans-serif"
-                                                }
-                                            },
-                                            grid: {
-                                                display: false,
-                                                drawBorder: false
-                                            },
-                                            ticks: {
-                                                font: {
-                                                    size: 12,
-                                                    family: "'Figtree', sans-serif"
-                                                },
-                                                color: '#6B7280',
-                                                padding: 8,
-                                                callback: function(value) {
-                                                    return 'Rp ' + value.toLocaleString('id-ID');
-                                                }
-                                            },
-                                            beginAtZero: true
-                                        }
-                                    },
-                                    animation: {
-                                        duration: 2000,
-                                        easing: 'easeOutQuart'
-                                    }
-                                }
-                            });
-                        });
-                    </script>
+                <!-- Recent Testimonials -->
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg lg:col-span-2">
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-semibold text-gray-900">Recent Testimonials</h3>
+                            <a href="{{ route('admin.testimonials.index') }}" class="text-indigo-600 hover:text-indigo-700 text-sm font-medium">
+                                View All →
+                            </a>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="recent-testimonials">
+                            @foreach(\App\Models\Testimonial::with(['user', 'product'])->latest()->take(4)->get() as $testimonial)
+                                <div class="flex space-x-4 p-4 hover:bg-gray-50 rounded-lg transition-colors border border-gray-100">
+                                    <div class="flex-shrink-0">
+                                        <div class="h-10 w-10 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-white font-bold">
+                                            {{ strtoupper(substr($testimonial->user->name ?? 'U', 0, 1)) }}
+                                        </div>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex justify-between items-start">
+                                            <p class="text-sm font-medium text-gray-900 truncate">{{ $testimonial->user->name ?? 'User Dihapus' }}</p>
+                                            <span class="text-xs text-gray-500">{{ $testimonial->created_at->diffForHumans() }}</span>
+                                        </div>
+                                        <p class="text-xs text-gray-500 mb-1">on <span class="font-medium text-indigo-600">{{ $testimonial->product->name ?? 'Produk Dihapus' }}</span></p>
+                                        <div class="flex items-center mb-1">
+                                            @for($i = 1; $i <= 5; $i++)
+                                                <svg class="h-4 w-4 {{ $i <= $testimonial->rating ? 'text-yellow-400' : 'text-gray-300' }} fill-current" viewBox="0 0 20 20">
+                                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                                </svg>
+                                            @endfor
+                                        </div>
+                                        <p class="text-sm text-gray-600 line-clamp-2">{{ $testimonial->comment }}</p>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
                 </div>
             </div>
-        </main>
-    </div>
 
-    @livewireScripts
-</body>
-</html>
+
+
+            <script>
+                // Wait for Chart.js to be fully loaded
+                function initializeCharts() {
+                    // Check if Chart.js is loaded
+                    if (typeof Chart === 'undefined') {
+                        console.log('Chart.js not loaded yet, retrying...');
+                        setTimeout(initializeCharts, 100);
+                        return;
+                    }
+
+                    console.log('Chart.js loaded, initializing charts...');
+                    
+                    // Common Chart Options
+                    Chart.defaults.font.family = "'Figtree', sans-serif";
+                    Chart.defaults.color = '#6B7280';
+                    
+                    // Order Trends Chart (Modern Line/Area Chart)
+                    const ctx = document.getElementById('orderChart');
+                    if (!ctx) {
+                        console.error('orderChart canvas not found');
+                        return;
+                    }
+                    
+                    const orderChart = new Chart(ctx.getContext('2d'), {
+                        type: 'line',
+                        data: {
+                            labels: @json($dates),
+                            datasets: [
+                                {
+                                    label: 'Total Order',
+                                    data: @json($orderCounts),
+                                    borderColor: '#F97316', // Orange-500
+                                    backgroundColor: (context) => {
+                                        const ctx = context.chart.ctx;
+                                        const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+                                        gradient.addColorStop(0, 'rgba(249, 115, 22, 0.2)');
+                                        gradient.addColorStop(1, 'rgba(249, 115, 22, 0)');
+                                        return gradient;
+                                    },
+                                    borderWidth: 3,
+                                    fill: true,
+                                    tension: 0.4,
+                                    pointBackgroundColor: '#FFFFFF',
+                                    pointBorderColor: '#F97316',
+                                    pointBorderWidth: 2,
+                                    pointRadius: 4,
+                                    pointHoverRadius: 6,
+                                    yAxisID: 'y'
+                                },
+                                {
+                                    label: 'Pendapatan (Rp)',
+                                    data: @json($revenues),
+                                    borderColor: '#10B981', // Emerald-500
+                                    backgroundColor: (context) => {
+                                        const ctx = context.chart.ctx;
+                                        const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+                                        gradient.addColorStop(0, 'rgba(16, 185, 129, 0.2)');
+                                        gradient.addColorStop(1, 'rgba(16, 185, 129, 0)');
+                                        return gradient;
+                                    },
+                                    borderWidth: 3,
+                                    fill: true,
+                                    tension: 0.4,
+                                    pointBackgroundColor: '#FFFFFF',
+                                    pointBorderColor: '#10B981',
+                                    pointBorderWidth: 2,
+                                    pointRadius: 4,
+                                    pointHoverRadius: 6,
+                                    yAxisID: 'y1'
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            interaction: {
+                                intersect: false,
+                                mode: 'index',
+                            },
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                    align: 'end',
+                                    labels: {
+                                        usePointStyle: true,
+                                        boxWidth: 8,
+                                        padding: 20,
+                                        font: { size: 12 }
+                                    }
+                                },
+                                tooltip: {
+                                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                                    titleColor: '#1F2937',
+                                    bodyColor: '#4B5563',
+                                    borderColor: '#E5E7EB',
+                                    borderWidth: 1,
+                                    padding: 10,
+                                    displayColors: true,
+                                    callbacks: {
+                                        label: function(context) {
+                                            let label = context.dataset.label || '';
+                                            if (label) label += ': ';
+                                            if (context.datasetIndex === 1) {
+                                                label += new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(context.raw);
+                                            } else {
+                                                label += context.raw;
+                                            }
+                                            return label;
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    grid: { display: false },
+                                    ticks: { maxTicksLimit: 7 }
+                                },
+                                y: {
+                                    type: 'linear',
+                                    display: true,
+                                    position: 'left',
+                                    grid: { borderDash: [4, 4], color: '#F3F4F6' },
+                                    beginAtZero: true,
+                                    title: { display: true, text: 'Order' }
+                                },
+                                y1: {
+                                    type: 'linear',
+                                    display: true,
+                                    position: 'right',
+                                    grid: { display: false },
+                                    beginAtZero: true,
+                                    ticks: {
+                                        callback: function(value) {
+                                            return 'Rp ' + (value/1000) + 'k';
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                    // Top Selling Products Chart (Modern Horizontal Bar)
+                    const topCtx = document.getElementById('topProductsChart');
+                    if (!topCtx) {
+                        console.error('topProductsChart canvas not found');
+                        return;
+                    }
+                    
+                    const topProductsChart = new Chart(topCtx.getContext('2d'), {
+                        type: 'bar',
+                        data: {
+                            labels: @json($topProductNames),
+                            datasets: [{
+                                label: 'Terjual (Porsi)',
+                                data: @json($topProductQuantities),
+                                backgroundColor: [
+                                    'rgba(249, 115, 22, 0.8)', // Orange
+                                    'rgba(251, 146, 60, 0.8)',
+                                    'rgba(253, 186, 116, 0.8)',
+                                    'rgba(254, 215, 170, 0.8)',
+                                    'rgba(255, 237, 213, 0.8)',
+                                ],
+                                borderRadius: 6,
+                                barThickness: 24,
+                            }]
+                        },
+                        options: {
+                            indexAxis: 'y', // Horizontal bar
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: {
+                                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                                    titleColor: '#1F2937',
+                                    bodyColor: '#4B5563',
+                                    borderColor: '#E5E7EB',
+                                    borderWidth: 1,
+                                    padding: 10,
+                                    callbacks: {
+                                        label: function(context) {
+                                            return context.raw + ' Porsi Terjual';
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    grid: { borderDash: [4, 4], color: '#F3F4F6' },
+                                    beginAtZero: true
+                                },
+                                y: {
+                                    grid: { display: false }
+                                }
+                            }
+                        }
+                    });
+
+                    // Function to update dashboard data
+                    function updateDashboard() {
+                        fetch('/admin/dashboard-data')
+                            .then(response => response.json())
+                            .then(data => {
+                                // Update statistics
+                                document.getElementById('total-orders').textContent = data.totalOrders;
+                                document.getElementById('total-revenue').textContent = 'Rp ' + data.totalRevenue.toLocaleString('id-ID');
+
+                                // Update Order Chart
+                                orderChart.data.labels = data.dates;
+                                orderChart.data.datasets[0].data = data.orderCounts;
+                                orderChart.data.datasets[1].data = data.revenues;
+                                orderChart.update();
+
+                                // Update Top Products Chart
+                                topProductsChart.data.labels = data.topProductNames;
+                                topProductsChart.data.datasets[0].data = data.topProductQuantities;
+                                topProductsChart.update();
+
+                                // Update recent orders
+                                const recentOrdersTable = document.getElementById('recent-orders');
+                                if (recentOrdersTable) recentOrdersTable.innerHTML = data.recentOrdersHtml;
+
+                                // Update recent testimonials
+                                const recentTestimonialsContainer = document.getElementById('recent-testimonials');
+                                if (recentTestimonialsContainer && data.recentTestimonialsHtml) {
+                                    recentTestimonialsContainer.innerHTML = data.recentTestimonialsHtml;
+                                }
+                            })
+                            .catch(error => console.error('Error updating dashboard:', error));
+                    }
+
+                    // Update dashboard every 30 seconds
+                    setInterval(updateDashboard, 30000);
+                    
+                    console.log('Charts initialized successfully!');
+                }
+
+                // Start initialization when DOM is ready
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', initializeCharts);
+                } else {
+                    // DOM already loaded
+                    initializeCharts();
+                }
+            </script>
+        </div>
+    </div>
+</x-admin-layout>

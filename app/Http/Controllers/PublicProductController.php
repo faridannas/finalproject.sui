@@ -27,22 +27,27 @@ class PublicProductController extends Controller
         }
 
         $products = $query->paginate(12);
-
-        return view('products.index', compact('products'));
+        $categories = Category::all();
+        $title = 'Menu Seblak UMI - Varian Seblak Prasmanan Terlengkap';
+        $description = 'Jelajahi aneka pilihan menu seblak dan topping di Seblak UMI. Nikmati sensasi seblak prasmanan dengan resep autentik dan bahan-bahan premium.';
+        return view('products.index', compact('products', 'categories', 'title', 'description'));
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request, string $id)
     {
-        $product = Product::with('category', 'testimonials')->findOrFail($id);
+        $product = Product::with('category', 'testimonials.user')->findOrFail($id);
 
         // SEO Meta Data
         $title = $product->name . ' - Seblak Premium | Seblak UMI';
         $description = 'Pesan ' . $product->name . ' - ' . Str::limit($product->desc, 150) . ' Harga: Rp ' . number_format($product->price, 0, ',', '.') . '. Seblak autentik dengan bahan premium!';
         $ogImage = $product->image ? asset('storage/' . $product->image) : asset('images/seblak-umi-og.jpg');
 
-        return view('products.show', compact('product', 'title', 'description', 'ogImage'));
+        // Log the request (assuming logger is set up elsewhere, but since it's not, we'll skip for now)
+        // logger->info("Request received: " . $request->method() . " " . $request->path());
+
+        return view('products.show', compact('product', 'title', 'description', 'ogImage', 'request'));
     }
 }

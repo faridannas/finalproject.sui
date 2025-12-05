@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Payment;
 use App\Models\Order;
-use App\Services\MidtransService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class PaymentController extends Controller
 {
@@ -21,71 +21,88 @@ class PaymentController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Display the specified resource (Payment Page / Upload Proof).
      */
-    public function create()
+    public function show(string $orderId)
     {
-        //
+        // Find order with payment
+        $order = Order::where('user_id', Auth::id())
+            ->with(['orderItems.product', 'payment'])
+            ->findOrFail($orderId);
+
+        // Check if payment exists
+        if (!$order->payment) {
+            return redirect()->route('orders.index')
+                ->with('error', 'Informasi pembayaran tidak ditemukan.');
+        }
+
+        // Jika COD, tidak perlu upload bukti transfer
+        if ($order->payment->payment_method === 'cod') {
+            return redirect()->route('orders.show', $order->id);
+        }
+
+        return view('payments.show', compact('order'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Handle Upload Proof of Payment
      */
-    public function store(Request $request)
+    public function uploadProof(Request $request, string $id)
     {
         $request->validate([
-            'order_id' => 'required|exists:orders,id',
+            'proof_of_payment' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'bank_name' => 'nullable|string|max:100',
+            'account_name' => 'nullable|string|max:100',
         ]);
 
-        try {
-            $order = Order::with(['user', 'orderItems.product'])->findOrFail($request->order_id);
-            
-            if ($order->user_id !== Auth::id()) {
-                abort(403);
-            }
-
-            $midtrans = new MidtransService();
-            $snapToken = $midtrans->createTransaction($order);
-
-            return response()->json([
-                'snap_token' => $snapToken,
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Payment Error: ' . $e->getMessage());
-            return response()->json([
-                'error' => 'Failed to process payment'
-            ], 500);
-        }
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        $payment = Payment::where('user_id', Auth::id())->with('order.orderItems.product')->findOrFail($id);
-        return view('payments.show', compact('payment'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        // Manual payment confirmation (for admin or user)
         $payment = Payment::findOrFail($id);
-        if ($payment->user_id !== Auth::id() && !Auth::user()->isAdmin()) {
+
+        // Security check
+        if ($payment->user_id !== Auth::id()) {
             abort(403);
         }
 
+        try {
+            if ($request->hasFile('proof_of_payment')) {
+                // Delete old proof if exists
+                if ($payment->proof_of_payment) {
+                    Storage::disk('public')->delete($payment->proof_of_payment);
+                }
+
+                // Store new proof
+                $path = $request->file('proof_of_payment')->store('payment_proofs', 'public');
+                
+                $payment->update([
+                    'proof_of_payment' => $path,
+                    'bank_name' => $request->bank_name,
+                    'account_name' => $request->account_name,
+                    'payment_status' => 'pending', // Tetap pending menunggu konfirmasi admin
+                ]);
+
+                return redirect()->route('orders.show', $payment->order_id)
+                    ->with('success', 'Bukti pembayaran berhasil diupload! Mohon tunggu konfirmasi admin.');
+            }
+
+            return redirect()->back()->with('error', 'Gagal mengupload bukti pembayaran.');
+
+        } catch (\Exception $e) {
+            Log::error('Upload Proof Error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengupload bukti pembayaran.');
+        }
+    }
+
+    /**
+     * Confirm Payment (Admin Only)
+     */
+    public function confirm(string $id)
+    {
+        // Hanya admin yang boleh konfirmasi
+        if (!Auth::user()->isAdmin()) {
+            abort(403);
+        }
+
+        $payment = Payment::findOrFail($id);
+        
         $payment->update([
             'payment_status' => 'success',
         ]);
@@ -94,29 +111,28 @@ class PaymentController extends Controller
             'status' => 'paid',
         ]);
 
-        return redirect()->back()->with('success', 'Payment confirmed successfully.');
+        return redirect()->back()->with('success', 'Pembayaran berhasil dikonfirmasi.');
     }
-
+    
     /**
-     * Remove the specified resource from storage.
+     * Reject Payment (Admin Only)
      */
-    public function destroy(string $id)
+    public function reject(string $id)
     {
-        //
-    }
-
-    public function notification(Request $request)
-    {
-        try {
-            $notification = $request->all();
-            
-            $midtrans = new MidtransService();
-            $payment = $midtrans->handleNotification($notification);
-
-            return response()->json(['success' => true]);
-        } catch (\Exception $e) {
-            Log::error('Notification Error: ' . $e->getMessage());
-            return response()->json(['error' => $e->getMessage()], 500);
+        // Hanya admin yang boleh tolak
+        if (!Auth::user()->isAdmin()) {
+            abort(403);
         }
+
+        $payment = Payment::findOrFail($id);
+        
+        $payment->update([
+            'payment_status' => 'failed',
+        ]);
+        
+        // Opsional: Order status bisa diubah ke cancelled atau tetap pending
+        // $payment->order->update(['status' => 'cancelled']);
+
+        return redirect()->back()->with('success', 'Pembayaran ditolak.');
     }
 }

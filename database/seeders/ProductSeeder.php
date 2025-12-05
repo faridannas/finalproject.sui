@@ -30,7 +30,7 @@ class ProductSeeder extends Seeder
                 'price' => 35000,
                 'stock' => 50,
                 'category_id' => 4,
-                'image' => 'products/seblak-seafood.jpg'
+                'image' => 'images/Seblakseafood.jpg'
             ],
             [
                 'name' => 'Seblak Kering Manis',
@@ -38,7 +38,7 @@ class ProductSeeder extends Seeder
                 'price' => 25000,
                 'stock' => 50,
                 'category_id' => 1,
-                'image' => 'products/seblak-kering-manis.jpg'
+                'image' => 'images/seblakkering.jpg'
             ],
             [
                 'name' => 'Seblak Kuah Komplit',
@@ -46,7 +46,7 @@ class ProductSeeder extends Seeder
                 'price' => 30000,
                 'stock' => 50,
                 'category_id' => 2,
-                'image' => 'products/seblak-kuah-komplit.jpg'
+                'image' => 'images/seblakkuahkomplit.webp'
             ],
             [
                 'name' => 'Seblak Super Pedas',
@@ -54,7 +54,7 @@ class ProductSeeder extends Seeder
                 'price' => 32000,
                 'stock' => 50,
                 'category_id' => 3,
-                'image' => 'products/seblak-super-pedas.jpg'
+                'image' => 'images/seblaklevel2.webp'
             ],
             [
                 'name' => 'Seblak Mie Jumbo',
@@ -62,7 +62,7 @@ class ProductSeeder extends Seeder
                 'price' => 28000,
                 'stock' => 50,
                 'category_id' => 2,
-                'image' => 'products/seblak-mie-jumbo.jpg'
+                'image' => 'images/seblaklevel1.jpg'
             ],
             [
                 'name' => 'Seblak Tulang',
@@ -70,7 +70,7 @@ class ProductSeeder extends Seeder
                 'price' => 35000,
                 'stock' => 50,
                 'category_id' => 4,
-                'image' => 'products/seblak-tulang.jpg'
+                'image' => 'images/seblakpremium.webp'
             ]
         ];
 

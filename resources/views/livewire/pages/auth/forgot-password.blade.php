@@ -4,58 +4,79 @@ use Illuminate\Support\Facades\Password;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 
-new #[Layout('layouts.guest')] class extends Component
-{
-    public string $email = '';
+// Define layout explicitly
+use function Livewire\Volt\layout;
+layout('layouts.login-layout');
 
-    /**
-     * Send a password reset link to the provided email address.
-     */
-    public function sendPasswordResetLink(): void
-    {
-        $this->validate([
-            'email' => ['required', 'string', 'email'],
-        ]);
+use function Livewire\Volt\state;
+use function Livewire\Volt\rules;
 
-        // We will send the password reset link to this user. Once we have attempted
-        // to send the link, we will examine the response then see the message we
-        // need to show to the user. Finally, we'll send out a proper response.
-        $status = Password::sendResetLink(
-            $this->only('email')
-        );
+state(['email' => '']);
 
-        if ($status != Password::RESET_LINK_SENT) {
-            $this->addError('email', __($status));
+rules(['email' => 'required|email']);
 
-            return;
-        }
+$sendPasswordResetLink = function () {
+    $this->validate();
 
-        $this->reset('email');
+    $status = Password::sendResetLink(
+        $this->only('email')
+    );
 
-        session()->flash('status', __($status));
+    if ($status != Password::RESET_LINK_SENT) {
+        $this->addError('email', __($status));
+        return;
     }
-}; ?>
 
-<div>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+    $this->reset('email');
+
+    session()->flash('status', __($status));
+};
+
+?>
+
+<div class="min-h-screen flex items-center justify-center px-4">
+    <div class="auth-card w-full max-w-md">
+        <a href="/" class="flex justify-center mb-6">
+            <img src="{{ asset('images/logoseblak.jpeg') }}" alt="Seblak Umi AI Logo" class="h-16 w-16 object-contain rounded-lg">
+        </a>
+        
+        <h1 class="auth-title">Lupa Password?</h1>
+        <p class="auth-subtitle">
+            Jangan khawatir! Masukkan email Anda dan kami akan mengirimkan link reset password.
+        </p>
+
+        <!-- Session Status -->
+        <x-auth-session-status class="mb-4" :status="session('status')" />
+
+        <form wire:submit="sendPasswordResetLink" class="space-y-6">
+            <!-- Email Address -->
+            <div>
+                <label for="email" class="form-label">Email Address</label>
+                <div class="relative">
+                    <input 
+                        wire:model="email" 
+                        id="email" 
+                        class="form-input" 
+                        type="email" 
+                        name="email" 
+                        required 
+                        autofocus 
+                        placeholder="nama@email.com"
+                    />
+                </div>
+                @error('email') <span class="text-sm text-red-600 mt-1 block">{{ $message }}</span> @enderror
+            </div>
+
+            <button type="submit" class="auth-button">
+                Kirim Link Reset Password
+            </button>
+        </form>
+
+        <div class="mt-8 text-center text-sm text-gray-600">
+            Ingat password Anda?
+            <a href="{{ route('login') }}" class="auth-link" wire:navigate>
+                Kembali ke Login
+            </a>
+        </div>
     </div>
-
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
-
-    <form wire:submit="sendPasswordResetLink">
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input wire:model="email" id="email" class="block mt-1 w-full" type="email" name="email" required autofocus />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Email Password Reset Link') }}
-            </x-primary-button>
-        </div>
-    </form>
 </div>

@@ -34,7 +34,7 @@ class CartComponent extends Component
 
         $product = Product::find($productId);
         if (!$product || $product->stock < $quantity) {
-            session()->flash('error', 'Product not available or insufficient stock.');
+            session()->flash('error', 'Produk tidak tersedia atau stok tidak mencukupi.');
             return;
         }
 
@@ -43,7 +43,7 @@ class CartComponent extends Component
         if ($cartItem) {
             $newQuantity = $cartItem->quantity + $quantity;
             if ($newQuantity > $product->stock) {
-                session()->flash('error', 'Insufficient stock.');
+                session()->flash('error', 'Stok tidak mencukupi.');
                 return;
             }
             $cartItem->update([
@@ -60,19 +60,19 @@ class CartComponent extends Component
         }
 
         $this->loadCart();
-        session()->flash('success', 'Product added to cart.');
+        session()->flash('success', 'Produk berhasil ditambahkan ke keranjang.');
     }
 
     public function buyNow($productId, $quantity = 1)
     {
         if (!Auth::check()) {
-            session()->flash('error', 'Please login to continue.');
+            session()->flash('error', 'Silakan login untuk melanjutkan.');
             return $this->redirect(route('login'));
         }
 
         $product = Product::find($productId);
         if (!$product || $product->stock < $quantity) {
-            session()->flash('error', 'Product not available or insufficient stock.');
+            session()->flash('error', 'Produk tidak tersedia atau stok tidak mencukupi.');
             return $this->redirect(request()->header('Referer') ?: route('products.index'));
         }
 
@@ -98,7 +98,7 @@ class CartComponent extends Component
         if ($cartItem && $cartItem->user_id == Auth::id()) {
             $product = $cartItem->product;
             if ($quantity > $product->stock) {
-                session()->flash('error', 'Insufficient stock.');
+                session()->flash('error', 'Stok tidak mencukupi.');
                 return;
             }
             if ($quantity <= 0) {
@@ -119,7 +119,7 @@ class CartComponent extends Component
         if ($cartItem && $cartItem->user_id == Auth::id()) {
             $cartItem->delete();
             $this->loadCart();
-            session()->flash('success', 'Product removed from cart.');
+            session()->flash('success', 'Produk berhasil dihapus dari keranjang.');
         }
     }
 

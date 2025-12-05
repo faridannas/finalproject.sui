@@ -1,402 +1,371 @@
 <x-guest-layout>
     {{-- Header / Navbar --}}
-    <header class="bg-gradient-to-r from-slate-900 via-orange-900 to-red-900 text-white sticky top-0 z-50 shadow-lg">
-        <div class="container mx-auto flex justify-between items-center p-4">
-            <a href="{{ route('welcome') }}" class="flex items-center space-x-2 text-2xl font-bold">
-                <span>🍲</span>
-                <span>Seblak Umi AI</span>
-            </a>
+    <x-navbar :transparent="true" />
 
-            {{-- Search Bar --}}
-            <div class="hidden md:flex flex-1 max-w-md mx-8">
-                <form action="{{ route('products.index') }}" method="GET" class="w-full">
-                    <div class="relative">
-                        <div class="absolute left-3 flex items-center pointer-events-none h-full">
-                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+    {{-- Hero Section --}}
+    <section id="hero" class="relative min-h-[600px] md:h-[700px] flex items-center justify-center overflow-hidden">
+        {{-- Background Image with Parallax Effect --}}
+        <div class="absolute inset-0 z-0">
+            <img src="{{ asset('images/seblakpremium.webp') }}" alt="Seblak Premium" class="w-full h-full object-cover scale-105 animate-slow-zoom">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-slate-900/30"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-slate-900/80 to-transparent"></div>
+        </div>
+
+        <div class="container mx-auto px-4 relative z-10 pt-10">
+            <div class="max-w-4xl mx-auto text-center">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-500/20 border border-orange-500/30 backdrop-blur-sm mb-6 animate-fade-in-up">
+                    <span class="relative flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-orange-500"></span>
+                    </span>
+                    <span class="text-orange-300 font-semibold text-sm tracking-wide uppercase">Lagi Viral Di TikTok 🔥</span>
+                </div>
+
+                <h1 class="text-5xl md:text-7xl font-black text-white mb-6 leading-tight animate-fade-in-up delay-100 drop-shadow-2xl">
+                    Pedasnya Bikin <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">Ketagihan!</span>
+                </h1>
+
+                <p class="text-lg md:text-xl text-gray-300 mb-10 max-w-2xl mx-auto leading-relaxed animate-fade-in-up delay-200">
+                    Rasakan sensasi seblak autentik dengan bumbu rahasia dan topping premium melimpah. Siap menggoyang lidahmu?
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-up delay-300">
+                    <a href="{{ route('products.index') }}" class="group relative px-8 py-4 bg-gradient-to-r from-orange-600 to-red-600 rounded-full text-white font-bold text-lg shadow-xl shadow-orange-600/30 hover:shadow-orange-600/50 transition-all transform hover:-translate-y-1 overflow-hidden w-full sm:w-auto">
+                        <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                        <span class="relative flex items-center justify-center gap-2">
+                            Pesan Sekarang
+                            <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                             </svg>
-                        </div>
-
-                        <input type="text" name="search" placeholder="Cari seblak?"
-                               class="search-input bg-slate-800/50 border-orange-800/50 text-white placeholder-gray-400 focus:ring-orange-500 focus:border-orange-500 pl-10 pr-4 w-full">
-                    </div>
-                </form>
-            </div>
-
-            <nav class="hidden md:flex items-center space-x-6 font-medium">
-                <a href="{{ route('welcome') }}" class="text-white hover:text-orange-300 transition-colors">Home</a>
-                <a href="{{ route('products.index') }}" class="text-gray-300 hover:text-orange-400 transition-colors">Products</a>
-                <a href="{{ route('categories.index') }}" class="text-gray-300 hover:text-orange-400 transition-colors">Categories</a>
-                <a href="#reviews" class="text-gray-300 hover:text-orange-400 transition-colors">Reviews</a>
-            </nav>
-
-            <div class="flex-1"></div>
-
-            <div class="flex items-center space-x-4">
-                {{-- Cart Icon --}}
-                @auth
-                    <a href="{{ route('cart') }}" class="relative text-gray-300 hover:text-orange-400 transition-colors">
-                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.1 5H19M7 13v8a2 2 0 002 2h10a2 2 0 002-2v-3">
-                            </path>
-                        </svg>
-                        @if(Auth::check() && \App\Models\Cart::where('user_id', Auth::id())->count() > 0)
-                            <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                                {{ \App\Models\Cart::where('user_id', Auth::id())->count() }}
-                            </span>
-                        @endif
+                        </span>
                     </a>
-                @endauth
-
-                @auth
-                    <form action="{{ route('logout') }}" method="POST" class="inline">
-                        @csrf
-                        <button class="px-3 py-1.5 bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium rounded-md transition-colors">Logout</button>
-                    </form>
-                @else
-                    <div class="flex items-center space-x-4">
-                        <a href="{{ route('login') }}" class="text-gray-300 hover:text-orange-400 transition-colors text-sm font-medium">Login</a>
-                        <a href="{{ route('register') }}" class="px-3 py-1.5 bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium rounded-md transition-colors">Register</a>
-                    </div>
-                @endauth
+                    <a href="#featured" class="px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-white font-semibold text-lg hover:bg-white/20 transition-all w-full sm:w-auto">
+                        Lihat Menu
+                    </a>
+                </div>
             </div>
         </div>
 
-        {{-- Mobile Menu --}}
-        <div class="md:hidden border-t border-orange-800/50">
-            <div class="container mx-auto px-4 py-3">
-                <form action="{{ route('products.index') }}" method="GET">
-                    <div class="relative">
-                        <div class="absolute left-3 flex items-center pointer-events-none h-full">
-                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                        </div>
-
-                        <input type="text" name="search" placeholder="Cari seblak?"
-                               class="search-input bg-slate-800/50 border-orange-800/50 text-white placeholder-gray-400 focus:ring-orange-500 focus:border-orange-500 pl-10 pr-4 w-full">
-                    </div>
-                </form>
-            </div>
-        </div>
-    </header>
-
-    {{-- Hero Section with Background Image --}}
-    <section id="hero" class="hero-background flex items-center justify-center relative h-[600px]"
-             style="background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url('{{ asset('images/seblakpremium.webp') }}'); background-size: cover; background-position: center;">
-        <div class="gradient-overlay absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
-        <div class="hero-content container mx-auto px-4 py-20 text-center z-10">
-            <p class="text-white font-semibold text-lg mb-2 animate-fade-in">🔥 Lagi Viral!</p>
-            <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-6 animate-slide-up text-shadow-lg">
-                Seblak Premium Autentik &amp; Pedas
-            </h1>
-            <p class="text-gray-100 mb-8 max-w-2xl mx-auto text-lg animate-fade-in text-shadow">
-                Rasakan sensasi pedas yang bikin nagih! Dibuat dengan bahan premium dan resep rahasia turun-temurun.
-                🌶️✨
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="{{ route('products.index') }}" class="hero-button">
-                    Pesan Sekarang →
-                </a>
-                <a href="#featured"
-                    class="bg-white text-primary px-8 py-3 rounded-lg hover:bg-gray-50 transition transform hover:scale-105 font-semibold">
-                    Lihat Menu
-                </a>
+        {{-- Floating Badge (Desktop Only) --}}
+        <div class="hidden lg:block absolute bottom-10 right-10 animate-float">
+            <div class="bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-2xl shadow-2xl flex items-center gap-4 max-w-xs">
+                <div class="bg-green-500/20 p-3 rounded-xl">
+                    <svg class="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-white font-bold text-lg">1000+ Terjual</p>
+                    <p class="text-gray-400 text-sm">Minggu ini</p>
+                </div>
             </div>
         </div>
     </section>
 
-    {{-- Stats Section --}}
-    <section class="bg-white py-16">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                <div class="animate-fade-in">
-                    <h3 class="text-3xl md:text-4xl font-bold text-primary mb-2">1000+</h3>
-                    <p class="text-secondary">Orders</p>
+    {{-- Stats Section (Modernized) --}}
+    <section class="relative -mt-10 z-20 px-4">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+                <div class="bg-white rounded-2xl p-6 shadow-xl shadow-slate-200/50 text-center transform hover:-translate-y-1 transition-transform duration-300">
+                    <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3 text-orange-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl md:text-3xl font-bold text-slate-800">1000+</h3>
+                    <p class="text-slate-500 text-sm font-medium">Pesanan Selesai</p>
                 </div>
-                <div class="animate-fade-in">
-                    <h3 class="text-3xl md:text-4xl font-bold text-primary mb-2">4.9★</h3>
-                    <p class="text-secondary">Rating</p>
+                <div class="bg-white rounded-2xl p-6 shadow-xl shadow-slate-200/50 text-center transform hover:-translate-y-1 transition-transform duration-300">
+                    <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-3 text-yellow-600">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl md:text-3xl font-bold text-slate-800">4.9</h3>
+                    <p class="text-slate-500 text-sm font-medium">Rating Rata-rata</p>
                 </div>
-                <div class="animate-fade-in">
-                    <h3 class="text-3xl md:text-4xl font-bold text-primary mb-2">500+</h3>
-                    <p class="text-secondary">Reviews</p>
+                <div class="bg-white rounded-2xl p-6 shadow-xl shadow-slate-200/50 text-center transform hover:-translate-y-1 transition-transform duration-300">
+                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3 text-red-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl md:text-3xl font-bold text-slate-800">500+</h3>
+                    <p class="text-slate-500 text-sm font-medium">Review Positif</p>
                 </div>
-                <div class="animate-fade-in">
-                    <h3 class="text-3xl md:text-4xl font-bold text-primary mb-2">24/7</h3>
-                    <p class="text-secondary">Service</p>
+                <div class="bg-white rounded-2xl p-6 shadow-xl shadow-slate-200/50 text-center transform hover:-translate-y-1 transition-transform duration-300">
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3 text-blue-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl md:text-3xl font-bold text-slate-800">24/7</h3>
+                    <p class="text-slate-500 text-sm font-medium">Siap Melayani</p>
                 </div>
             </div>
         </div>
     </section>
 
     {{-- Featured Products Section --}}
-    <section id="featured" class="py-16 bg-gray-50">
+    <section id="featured" class="py-20 bg-slate-50">
         <div class="container mx-auto px-4">
-            <div class="text-center mb-12">
-                <span class="inline-block bg-orange-100 text-primary px-4 py-2 rounded-full text-sm font-semibold mb-4">Menu Spesial</span>
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Menu Favorit Pelanggan</h2>
-                <p class="text-secondary text-lg max-w-2xl mx-auto">Pilih seblak favoritmu dari koleksi terbaik kami. Dibuat dengan bahan premium dan resep rahasia! 🌟</p>
+            <div class="text-center mb-16">
+                <span class="inline-block bg-orange-100 text-orange-600 px-4 py-1.5 rounded-full text-sm font-bold mb-4 tracking-wide uppercase">Menu Spesial</span>
+                <h2 class="text-3xl md:text-5xl font-black text-slate-900 mb-4">Favorit Pelanggan</h2>
+                <p class="text-slate-600 text-lg max-w-2xl mx-auto">Pilihan terbaik yang paling banyak dicari minggu ini. Jangan sampai kehabisan!</p>
             </div>
 
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                @php
-                    $featuredProducts = \App\Models\Product::with('category')->take(6)->get();
-                @endphp
-
                 @forelse($featuredProducts as $product)
-                    <div class="group relative bg-white rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl animate-fade-in">
-                        @php
-                            // Map product names to specific images in public/images folder
-                            $productImages = [
-                                'Seblak Seafood Special' => asset('images/Seblakseafood.jpg'),
-                                'Seblak Kering Manis' => asset('images/seblakkering.jpg'),
-                                'Seblak Kuah Komplit' => asset('images/seblakkuahkomplit.webp'),
-                                'Seblak Super Pedas' => asset('images/seblaklevel2.webp'),
-                                'Seblak Mie Jumbo' => asset('images/seblaklevel1.jpg'),
-                                'Seblak Tulang' => asset('images/seblakpremium.webp'),
-                            ];
-
-                            // Check for exact matches first
-                            $imageSrc = asset('images/seblakpremium.webp'); // Default image
-
-                            foreach ($productImages as $key => $url) {
-                                if (strtolower($product->name) === strtolower($key)) {
-                                    $imageSrc = $url;
-                                    break;
-                                }
-                            }
-
-                            // If no exact match, check for partial matches
-                            if ($imageSrc === asset('images/seblakpremium.webp')) {
-                                $partialImages = [
-                                    'Seafood' => asset('images/Seblakseafood.jpg'),
-                                    'Kering' => asset('images/seblakkering.jpg'),
-                                    'Kuah Komplit' => asset('images/seblakkuahkomplit.webp'),
-                                    'Super Pedas' => asset('images/seblaklevel2.webp'),
-                                    'Mie Jumbo' => asset('images/seblaklevel1.jpg'),
-                                    'Tulang' => asset('images/seblakpremium.webp'),
-                                ];
-
-                                foreach ($partialImages as $key => $url) {
-                                    if (stripos(strtolower($product->name), strtolower($key)) !== false) {
-                                        $imageSrc = $url;
-                                        break;
-                                    }
-                                }
-                            }
-                        @endphp
-                        <div class="relative overflow-hidden" style="height: 280px;">
-                            <img src="{{ $imageSrc }}"
-                                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    <div class="group relative bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-slate-100 flex flex-col h-full">
+                        <div class="relative h-64 overflow-hidden">
+                            <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('images/seblakpremium.webp') }}" 
+                                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                                  alt="{{ $product->name }}">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-40 transition-opacity group-hover:opacity-60"></div>
-                            @if($product->stock < 10)
-                                <div class="absolute top-4 left-4">
-                                    <span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                                        Stok Terbatas
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            
+                            {{-- Badges --}}
+                            <div class="absolute top-4 left-4 flex flex-col gap-2">
+                                @if($product->stock < 10)
+                                    <span class="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg animate-pulse">
+                                        Sisa {{ $product->stock }}!
                                     </span>
-                                </div>
-                            @endif
+                                @endif
+                            </div>
+                            
                             <div class="absolute top-4 right-4">
-                                <span class="bg-white/90 backdrop-blur-sm text-primary px-3 py-1 rounded-full text-sm font-medium">
+                                <span class="bg-white/90 backdrop-blur-md text-slate-800 px-3 py-1 rounded-full text-xs font-bold shadow-lg">
                                     {{ $product->category->name }}
                                 </span>
                             </div>
-                        </div>
 
-                        <div class="p-6">
-                            <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-primary transition-colors">
-                                {{ $product->name }}
-                            </h3>
-                            <p class="text-gray-600 mb-4 text-sm line-clamp-2">{{ $product->desc }}</p>
-                            
-                            <div class="flex items-center justify-between mb-4">
-                                <div class="flex items-center space-x-2">
-                                    <span class="text-2xl">
-                                        @for($i = 0; $i < min((int)str_replace('Level ', '', $product->category->name) ?? 1, 5); $i++)
-                                            🌶️
-                                        @endfor
-                                    </span>
-                                </div>
-                                <div class="text-right">
-                                    <span class="block text-lg font-bold text-primary">
-                                        Rp {{ number_format((float)$product->price, 0, ',', '.') }}
-                                    </span>
-                                    <span class="text-sm text-gray-500">Tersedia: {{ $product->stock }}</span>
-                                </div>
-                            </div>
-
-                            <div class="flex space-x-2">
-                                <a href="{{ route('products.show', $product) }}"
-                                    class="flex-1 bg-white border-2 border-primary text-primary px-4 py-2 rounded-xl hover:bg-primary hover:text-white transition-colors text-sm font-medium text-center">
+                            {{-- Quick Action (Desktop) --}}
+                            <div class="absolute bottom-4 left-0 right-0 px-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 hidden md:block">
+                                <a href="{{ route('products.show', $product) }}" class="block w-full bg-white text-slate-900 text-center py-2 rounded-xl font-bold hover:bg-orange-50 transition-colors">
                                     Lihat Detail
                                 </a>
+                            </div>
+                        </div>
+
+                        <div class="p-6 flex-1 flex flex-col">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-xl font-bold text-slate-900 group-hover:text-orange-600 transition-colors line-clamp-1">
+                                    {{ $product->name }}
+                                </h3>
+                                <div class="flex items-center gap-1">
+                                    <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
+                                    <span class="text-sm font-semibold text-slate-600">4.8</span>
+                                </div>
+                            </div>
+                            
+                            <p class="text-slate-500 text-sm mb-4 line-clamp-2 flex-1">{{ $product->desc }}</p>
+                            
+                            <div class="flex items-center justify-between mt-auto pt-4 border-t border-slate-100">
+                                <div>
+                                    <span class="text-xs text-slate-400 block mb-1">Harga</span>
+                                    <span class="text-lg font-black text-orange-600">
+                                        Rp {{ number_format((float)$product->price, 0, ',', '.') }}
+                                    </span>
+                                </div>
                                 @auth
-                                    <button wire:click="addToCart({{ $product->id }})"
-                                        class="flex-1 bg-primary text-white px-4 py-2 rounded-xl hover:bg-primary/90 transition-colors text-sm font-medium">
-                                        + Keranjang
+                                    <button wire:click="addToCart({{ $product->id }})" class="bg-slate-900 text-white p-3 rounded-xl hover:bg-orange-600 transition-colors shadow-lg shadow-slate-900/20 hover:shadow-orange-600/30">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.1 5H19M7 13v8a2 2 0 002 2h10a2 2 0 002-2v-3"></path>
+                                        </svg>
                                     </button>
+                                @else
+                                    <a href="{{ route('login') }}" class="bg-slate-900 text-white p-3 rounded-xl hover:bg-orange-600 transition-colors shadow-lg shadow-slate-900/20 hover:shadow-orange-600/30">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.1 5H19M7 13v8a2 2 0 002 2h10a2 2 0 002-2v-3"></path>
+                                        </svg>
+                                    </a>
                                 @endauth
                             </div>
                         </div>
                     </div>
                 @empty
-                    <div class="col-span-full text-center py-12">
-                        <p class="text-gray-500">Produk sedang dimuat...</p>
+                    <div class="col-span-full text-center py-20">
+                        <div class="inline-block p-6 bg-orange-50 rounded-full mb-4">
+                            <svg class="w-12 h-12 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                            </svg>
+                        </div>
+                        <p class="text-slate-500 text-lg">Belum ada produk yang tersedia.</p>
                     </div>
                 @endforelse
             </div>
 
-            <div class="text-center mt-12">
-                <a href="{{ route('products.index') }}" class="btn-seblak">
-                    Lihat Semua Produk →
+            <div class="text-center mt-16">
+                <a href="{{ route('products.index') }}" class="inline-flex items-center gap-2 px-8 py-3 bg-white border border-slate-200 rounded-full text-slate-900 font-bold hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm hover:shadow-md">
+                    Lihat Semua Menu
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                    </svg>
                 </a>
             </div>
         </div>
     </section>
 
     {{-- Categories Section --}}
-    <section id="categories" class="py-16 bg-white">
-        <div class="container mx-auto px-4 text-center">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Kategori Pilihan</h2>
-            <p class="text-secondary mb-10 text-lg">Pilih level kepedasan sesuai seleramu! 🌶️</p>
+    <section id="categories" class="py-24 bg-white relative overflow-hidden">
+        {{-- Background Pattern --}}
+        <div class="absolute inset-0 opacity-5 pointer-events-none">
+            <div class="absolute top-0 left-0 w-full h-full" style="background-image: radial-gradient(#ea580c 1px, transparent 1px); background-size: 30px 30px;"></div>
+        </div>
 
-            <div class="flex justify-center flex-wrap gap-4">
-                <span class="bg-orange-100 text-primary px-6 py-3 rounded-full font-semibold animate-fade-in">
-                    Level 1 - Pedas Manja
-                </span>
-                <span class="bg-orange-200 text-primary px-6 py-3 rounded-full font-semibold animate-fade-in">
-                    Level 2 - Pedas Gila
-                </span>
-                <span class="bg-orange-300 text-primary px-6 py-3 rounded-full font-semibold animate-fade-in">
-                    Level 3 - Pedas Neraka
-                </span>
+        <div class="container mx-auto px-4 text-center relative z-10">
+            <span class="text-orange-600 font-bold tracking-wider uppercase text-sm mb-2 block">Tantangan Pedas</span>
+            <h2 class="text-4xl md:text-5xl font-black text-slate-900 mb-6">Pilih Level Pedasmu 🔥</h2>
+            <p class="text-slate-600 mb-16 max-w-xl mx-auto text-lg">Sesuaikan tingkat kepedasan dengan keberanian lidahmu. Dari yang santai sampai yang bikin nangis!</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                {{-- Level 1 --}}
+                <div class="group relative p-8 rounded-[2rem] bg-white border-2 border-slate-100 hover:border-orange-400 transition-all duration-300 hover:shadow-2xl hover:shadow-orange-500/10">
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-2 rounded-full border-2 border-slate-100 group-hover:border-orange-400 transition-colors">
+                        <div class="w-16 h-16 rounded-full bg-orange-100 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform duration-300">
+                            🥵
+                        </div>
+                    </div>
+                    <div class="mt-8">
+                        <h3 class="text-2xl font-black text-slate-900 mb-2 group-hover:text-orange-600 transition-colors">Level 1</h3>
+                        <div class="inline-block px-3 py-1 rounded-full bg-orange-100 text-orange-700 text-xs font-bold mb-4">PEMULA</div>
+                        <p class="text-slate-500 leading-relaxed">
+                            Pedas nikmat yang masih sopan di lidah. Cocok buat kamu yang mau menikmati rasa seblak tanpa tersiksa.
+                        </p>
+                    </div>
+                </div>
+
+                {{-- Level 2 --}}
+                <div class="group relative p-8 rounded-[2rem] bg-gradient-to-b from-orange-50 to-white border-2 border-orange-200 hover:border-red-500 transition-all duration-300 hover:shadow-2xl hover:shadow-red-500/20 transform md:-translate-y-4">
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-2 rounded-full border-2 border-orange-200 group-hover:border-red-500 transition-colors">
+                        <div class="w-20 h-20 rounded-full bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center text-4xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+                            🔥
+                        </div>
+                    </div>
+                    <div class="mt-10">
+                        <h3 class="text-3xl font-black text-slate-900 mb-2 group-hover:text-red-600 transition-colors">Level 2</h3>
+                        <div class="inline-block px-3 py-1 rounded-full bg-red-100 text-red-700 text-xs font-bold mb-4">MENANTANG</div>
+                        <p class="text-slate-600 leading-relaxed font-medium">
+                            Mulai bikin keringetan! Sensasi pedas nendang yang bikin nagih terus suapan demi suapan.
+                        </p>
+                    </div>
+                </div>
+
+                {{-- Level 3 --}}
+                <div class="group relative p-8 rounded-[2rem] bg-white border-2 border-slate-100 hover:border-red-600 transition-all duration-300 hover:shadow-2xl hover:shadow-red-600/10">
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-2 rounded-full border-2 border-slate-100 group-hover:border-red-600 transition-colors">
+                        <div class="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform duration-300">
+                            ☠️
+                        </div>
+                    </div>
+                    <div class="mt-8">
+                        <h3 class="text-2xl font-black text-slate-900 mb-2 group-hover:text-red-700 transition-colors">Level 3</h3>
+                        <div class="inline-block px-3 py-1 rounded-full bg-red-900 text-white text-xs font-bold mb-4">NERAKA</div>
+                        <p class="text-slate-500 leading-relaxed">
+                            Khusus para sultan pedas! Siapkan mental, tisu, dan minuman dingin. Berani coba?
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
     {{-- Testimonials Section --}}
-    <section id="reviews" class="py-16 bg-gray-50">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Apa Kata Pelanggan</h2>
-                <p class="text-secondary text-lg">Pengalaman mereka dengan seblak kami</p>
+    <section id="reviews" class="py-20 bg-slate-900 relative overflow-hidden">
+        {{-- Decorative Elements --}}
+        <div class="absolute top-0 left-0 w-64 h-64 bg-orange-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob"></div>
+        <div class="absolute bottom-0 right-0 w-64 h-64 bg-red-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000"></div>
+
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-black text-white mb-4">Kata Mereka</h2>
+                <p class="text-slate-400">Apa kata pelanggan setia Seblak UMI tentang pengalaman mereka.</p>
             </div>
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                @php
-                    $testimonials = \App\Models\Testimonial::with('user')->take(3)->get();
-                @endphp
-
+            <div class="grid md:grid-cols-3 gap-8">
                 @forelse($testimonials as $testimonial)
-                    <div class="card-seblak animate-fade-in">
-                        <div class="p-6">
-                            <div class="flex items-center mb-4">
-                                <div class="flex text-yellow-400">
+                    <div class="bg-white/5 backdrop-blur-sm border border-white/10 p-8 rounded-3xl hover:bg-white/10 transition-colors">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center text-white font-bold text-lg">
+                                {{ substr($testimonial->user?->name ?? 'A', 0, 1) }}
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold">{{ $testimonial->user?->name ?? 'Pelanggan' }}</h4>
+                                <div class="flex text-yellow-400 text-xs">
                                     @for($i = 1; $i <= 5; $i++)
-                                        <svg class="w-5 h-5 {{ $i <= $testimonial->rating ? 'fill-current' : 'text-gray-300' }}"
-                                            viewBox="0 0 20 20">
-                                            <path
-                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                        </svg>
+                                        @if($i <= ($testimonial->rating ?? 5))
+                                            ★
+                                        @else
+                                            ☆
+                                        @endif
                                     @endfor
                                 </div>
                             </div>
-                            <p class="text-gray-700 mb-4 italic">"{{ $testimonial->comment }}"</p>
-                            <div class="flex items-center">
-                                <div
-                                    class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold mr-3">
-                                    {{ substr($testimonial->user->name ?? 'A', 0, 1) }}
-                                </div>
-                                <div>
-                                    <p class="font-semibold text-gray-900">{{ $testimonial->user->name ?? 'Anonymous' }}</p>
-                                    <p class="text-sm text-secondary">{{ $testimonial->created_at->diffForHumans() }}</p>
-                                </div>
-                            </div>
                         </div>
+                        <p class="text-slate-300 italic leading-relaxed">"{{ $testimonial->comment }}"</p>
+                        <p class="text-slate-500 text-xs mt-4">{{ $testimonial->created_at?->diffForHumans() }}</p>
                     </div>
                 @empty
-                    <div class="col-span-full text-center py-12">
-                        <p class="text-gray-500">Testimonial sedang dimuat...</p>
+                    <div class="col-span-full text-center text-slate-500">
+                        Belum ada review. Jadilah yang pertama!
                     </div>
                 @endforelse
             </div>
-
+            
             <div class="text-center mt-12">
-                <a href="{{ route('testimonials.index') }}" class="btn-seblak">
-                    Lihat Semua Review →
+                <a href="{{ route('testimonials.index') }}" class="text-orange-400 hover:text-orange-300 font-semibold inline-flex items-center gap-2 transition-colors">
+                    Baca Semua Review
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                    </svg>
                 </a>
             </div>
         </div>
     </section>
 
-    {{-- Footer --}}
-   <footer class="bg-orange-600 text-white" style="background-color: #ea580c;">
-   <footer class="bg-gradient-to-r from-slate-900 via-orange-900 to-red-900 text-white">
-    <div class="container mx-auto px-4 py-12">
-        <div class="grid md:grid-cols-4 gap-8">
-            <div>
-                <div class="flex items-center space-x-2 mb-4">
-                    <span class="text-2xl">🍲</span>
-                    <span class="text-xl font-bold text-white">Seblak UMI AI</span>
-                </div>
-                <p class="text-orange-50 mb-4 leading-relaxed">
-                <p class="text-gray-300 text-sm mb-4 leading-relaxed">
-                    Pedasnya bikin nagih! Seblak autentik dengan bahan premium.
-                </p>
-                <div class="flex space-x-4">
-                    <a href="#" class="text-orange-100 hover:text-white transition-colors text-lg">📘</a>
-                    <a href="#" class="text-orange-100 hover:text-white transition-colors text-lg">📷</a>
-                    <a href="#" class="text-orange-100 hover:text-white transition-colors text-lg">🐦</a>
-                    
-                </div>
-            </div>
+    <x-footer />
 
-            <div>
-                
-                <h3 class="font-semibold text-lg mb-4">Quick Links</h3>
-                <ul class="space-y-2 text-sm text-gray-300">
-                    <li><a href="{{ route('products.index') }}" class="hover:text-orange-400 transition-colors">Products</a></li>
-                    <li><a href="{{ route('categories.index') }}" class="hover:text-orange-400 transition-colors">Categories</a></li>
-                    <li><a href="{{ route('cart') }}" class="hover:text-orange-400 transition-colors">Cart</a></li>
-                    <li><a href="{{ route('testimonials.index') }}" class="hover:text-orange-400 transition-colors">Reviews</a></li>
-                </ul>
-            </div>
+    {{-- Custom Animations --}}
+    <style>
+        @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up {
+            animation: fade-in-up 0.8s ease-out forwards;
+        }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        @keyframes slow-zoom {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+        .animate-slow-zoom {
+            animation: slow-zoom 20s linear infinite alternate;
+        }
 
-            <div>
-               
-                <h3 class="font-semibold text-lg mb-4">Support</h3>
-                <ul class="space-y-2 text-sm text-gray-300">
-                    <li><a href="#" class="hover:text-orange-400 transition-colors">Help Center</a></li>
-                    <li><a href="#" class="hover:text-orange-400 transition-colors">Contact Us</a></li>
-                    <li><a href="#" class="hover:text-orange-400 transition-colors">Privacy Policy</a></li>
-                    <li><a href="#" class="hover:text-orange-400 transition-colors">Terms of Service</a></li>
-                </ul>
-            </div>
-
-            <div>
-                <ul class="space-y-2 text-orange-50">
-                <h3 class="font-semibold text-lg mb-4">Contact Info</h3>
-                <ul class="space-y-2 text-sm text-gray-300">
-                    <li>📍 Jln.Buyut Nasirun</li>
-                    <li>📞 +62 878 8031 7075</li>
-                    <li>✉️ info@seblakumi.com</li>
-                    <li>🕒 Mon-Sun: 08:00 - 22:00</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="border-t border-orange-400 mt-8 pt-8 text-center">
-            <p class="text-orange-50">&copy; {{ date('Y') }} Seblak UMI — Pedasnya Bikin Nagih 🔥</p>
-    </div>
-    
-    </div>
-</footer>
-
-
-
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+        .animation-delay-2000 {
+            animation-delay: 2s;
+        }
+    </style>
 </x-guest-layout>

@@ -1,47 +1,7 @@
-<?php
-
-use Illuminate\Auth\Events\Lockout;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Str;
-use Illuminate\Validation\ValidationException;
-use Livewire\Attributes\Layout;
-use Livewire\Volt\Component;
-
-new #[Layout('components.layouts.app')] class extends Component
-{
-    public string $email = '';
-    public string $password = '';
-    public bool $remember = false;
-
-    public function login(): void
-    {
-        $validated = $this->validate([
-            'email' => ['required', 'string', 'email'],
-            'password' => ['required', 'string'],
-        ]);
-
-        if (!Auth::attempt($validated, $this->remember)) {
-            throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
-            ]);
-        }
-
-        Session::regenerate();
-
-        if (Auth::user()->role === 'admin') {
-            $this->redirect(route('admin.dashboard'), navigate: true);
-        } else {
-            $this->redirect(session('url.intended', route('dashboard')), navigate: true);
-        }
-    }
-}; ?>
-
-<div class="min-h-screen flex items-center justify-center">
+<div class="min-h-screen flex items-center justify-center px-4">
     <div class="auth-card w-full max-w-md">
         <a href="/" class="flex justify-center mb-6">
-            <span class="text-4xl">🍲</span>
+            <img src="{{ asset('images/logoseblak.jpeg') }}" alt="Seblak Umi AI Logo" class="h-16 w-16 object-contain rounded-lg">
         </a>
         <h1 class="auth-title">Welcome Back!</h1>
         <p class="auth-subtitle">Please sign in to continue to your Seblak UMI account.</p>
@@ -94,4 +54,3 @@ new #[Layout('components.layouts.app')] class extends Component
         </p>
     </div>
 </div>
-

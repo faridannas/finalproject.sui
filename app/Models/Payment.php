@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
 {
+    public $timestamps = false;
+    
     protected $fillable = [
         'user_id',
         'order_id',
@@ -14,6 +16,9 @@ class Payment extends Model
         'amount',
         'transaction_id',
         'snap_token',
+        'proof_of_payment',
+        'bank_name',
+        'account_name',
     ];
 
     protected function casts(): array

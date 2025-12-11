@@ -207,13 +207,16 @@
         function performSearch(isMobile) {
             const searchInputId = isMobile ? 'search-input-mobile' : 'search-input-desktop';
             const categoryFilterId = isMobile ? 'category-filter-mobile' : 'category-filter-desktop';
+            const stockFilterId = isMobile ? 'stock-export-filter-mobile' : 'stock-export-filter-desktop';
             
             const search = document.getElementById(searchInputId).value;
             const category = document.getElementById(categoryFilterId).value;
+            const stockStatus = document.getElementById(stockFilterId).value;
             
             let url = '{{ route("admin.products.index") }}?';
             if (search) url += 'search=' + encodeURIComponent(search) + '&';
-            if (category) url += 'category=' + category;
+            if (category) url += 'category=' + category + '&';
+            if (stockStatus) url += 'stock_status=' + stockStatus;
             window.location.href = url;
         }
 
@@ -234,6 +237,7 @@
         // Desktop Events
         document.getElementById('search-btn-desktop')?.addEventListener('click', () => performSearch(false));
         document.getElementById('category-filter-desktop')?.addEventListener('change', () => performSearch(false));
+        document.getElementById('stock-export-filter-desktop')?.addEventListener('change', () => performSearch(false)); // Filter stock
         document.getElementById('export-products-btn-desktop')?.addEventListener('click', (e) => {
             e.preventDefault();
             performExport(false);
@@ -242,6 +246,7 @@
         // Mobile Events
         document.getElementById('search-btn-mobile')?.addEventListener('click', () => performSearch(true));
         document.getElementById('category-filter-mobile')?.addEventListener('change', () => performSearch(true));
+        document.getElementById('stock-export-filter-mobile')?.addEventListener('change', () => performSearch(true)); // Filter stock
         document.getElementById('export-products-btn-mobile')?.addEventListener('click', (e) => {
             e.preventDefault();
             performExport(true);

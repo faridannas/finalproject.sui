@@ -110,7 +110,7 @@
     <!-- Background wrapper -->
     <div class="fixed inset-0 bg-gradient-to-br from-slate-50 via-orange-50 to-red-50 -z-10"></div>
     <!-- User Navigation -->
-    @if(!request()->routeIs('dashboard') && !request()->routeIs('products.*') && !request()->routeIs('orders.*') && !request()->routeIs('cart') && !request()->routeIs('testimonials.*') && !request()->routeIs('checkout'))
+    @if(!request()->routeIs('dashboard') && !request()->routeIs('products.*') && !request()->routeIs('orders.*') && !request()->routeIs('cart') && !request()->routeIs('testimonials.*') && !request()->routeIs('checkout') && !request()->routeIs('transaction.history') && !request()->routeIs('payment.*'))
         <x-user-navbar />
     @endif
 

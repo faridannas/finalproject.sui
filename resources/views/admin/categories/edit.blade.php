@@ -17,7 +17,7 @@
                         <div class="mb-4">
                             <label for="name" class="block text-sm font-medium text-gray-700">Category Name</label>
                             <input type="text" name="name" id="name" value="{{ old('name', $category->name) }}"
-                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-300 focus:ring focus:ring-orange-200 focus:ring-opacity-50 @error('name') border-red-500 @enderror" required>
+                                   class="mt-1 block w-full rounded-xl border-2 border-gray-300 shadow-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:ring-opacity-50 px-4 py-2.5 @error('name') border-red-500 @enderror" required>
                             @error('name')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -27,7 +27,7 @@
                         <div class="mb-4">
                             <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
                             <textarea name="description" id="description" rows="4"
-                                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-300 focus:ring focus:ring-orange-200 focus:ring-opacity-50 @error('description') border-red-500 @enderror">{{ old('description', $category->description) }}</textarea>
+                                      class="mt-1 block w-full rounded-xl border-2 border-gray-300 shadow-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:ring-opacity-50 px-4 py-2.5 @error('description') border-red-500 @enderror">{{ old('description', $category->description) }}</textarea>
                             @error('description')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror

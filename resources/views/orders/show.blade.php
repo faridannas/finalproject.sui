@@ -1,9 +1,15 @@
 <x-app-layout>
-    <x-slot name="header">
-        {{ __('Detail Pesanan') }}
-    </x-slot>
+    <!-- Custom Header for Order Detail -->
+    <div class="bg-gradient-to-r from-orange-500 to-red-600 pb-8 pt-6 shadow-lg rounded-b-[2rem] mb-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-4 text-white">
+            <a href="{{ route('transaction.history') }}" class="bg-white/20 p-2 rounded-xl hover:bg-white/30 transition-colors backdrop-blur-sm">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+            </a>
+            <h1 class="text-2xl font-bold">Detail Pesanan</h1>
+        </div>
+    </div>
 
-    <div class="py-12">
+    <div class="py-6 md:py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
@@ -25,7 +31,7 @@
                                     @if($order->status === 'pending') bg-yellow-100 text-yellow-800
                                     @elseif($order->status === 'paid') bg-blue-100 text-blue-800
                                     @elseif($order->status === 'shipped') bg-purple-100 text-purple-800
-                                    @elseif($order->status === 'done') bg-green-100 text-green-800
+                                    @elseif($order->status === 'completed') bg-green-100 text-green-800
                                     @elseif($order->status === 'cancelled') bg-red-100 text-red-800
                                     @else bg-gray-100 text-gray-800 @endif">
                                     {{ ucfirst($order->status) }}
@@ -194,7 +200,7 @@
                                     <form method="POST" action="{{ route('admin.orders.update', $order) }}" class="inline">
                                         @csrf
                                         @method('PUT')
-                                        <input type="hidden" name="status" value="done">
+                                        <input type="hidden" name="status" value="completed">
                                         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
                                             Tandai Sudah Sampai
                                         </button>
@@ -212,6 +218,17 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                             </svg>
                                             Batalkan Pesanan
+                                        </button>
+                                    </form>
+                                @endif
+                                <!-- Delete Button for Cancelled/Completed Orders -->
+                                @if(in_array($order->status, ['cancelled', 'completed']))
+                                    <form method="POST" action="{{ route('orders.destroy', $order) }}" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg flex items-center">
+                                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                            Hapus Riwayat
                                         </button>
                                     </form>
                                 @endif

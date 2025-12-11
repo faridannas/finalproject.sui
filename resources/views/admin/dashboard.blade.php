@@ -48,11 +48,11 @@
                 <!-- Charts Section -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                     <!-- Sales Trend Chart -->
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div class="p-6">
-                            <div class="flex items-center justify-between mb-4">
-                                <h3 class="text-lg font-semibold text-gray-900">Tren Penjualan</h3>
-                                <span class="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-full">14 Hari Terakhir</span>
+                    <div class="bg-white overflow-hidden shadow-lg sm:rounded-2xl border border-gray-100">
+                        <div class="p-8">
+                            <div class="text-center mb-6">
+                                <h3 class="text-2xl font-bold text-blue-600 uppercase tracking-wide">Tren Penjualan</h3>
+                                <p class="text-sm text-gray-500 mt-2">Grafik penjualan 14 hari terakhir</p>
                             </div>
                             <div class="relative" style="height: 350px;">
                                 <canvas id="orderChart"></canvas>
@@ -61,14 +61,56 @@
                     </div>
 
                     <!-- Top Selling Products Chart -->
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div class="p-6">
-                            <div class="flex items-center justify-between mb-4">
-                                <h3 class="text-lg font-semibold text-gray-900">Top 5 Menu Favorit</h3>
-                                <span class="text-xs font-medium text-orange-600 bg-orange-50 px-2 py-1 rounded-full">Paling Laris</span>
+                    <div class="bg-gradient-to-br from-orange-50 to-white overflow-hidden shadow-lg sm:rounded-2xl border border-orange-100">
+                        <div class="p-8">
+                            <div class="text-center mb-6">
+                                <h3 class="text-2xl font-bold text-orange-600 uppercase tracking-wide">Produk Paling Populer</h3>
+                                <p class="text-sm text-gray-600 mt-2">Top 5 menu favorit pelanggan</p>
                             </div>
-                            <div class="relative" style="height: 350px;">
-                                <canvas id="topProductsChart"></canvas>
+                            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                <!-- Chart -->
+                                <div class="lg:col-span-2">
+                                    <div class="relative" style="height: 350px;">
+                                        <canvas id="topProductsChart"></canvas>
+                                    </div>
+                                </div>
+                                
+                                <!-- Circular Progress Indicators -->
+                                <div class="flex flex-col justify-center space-y-6">
+                                    @php
+                                        $totalSold = array_sum($topProductQuantities->toArray());
+                                        $topTwo = $topProductQuantities->take(2);
+                                    @endphp
+                                    
+                                    @foreach($topTwo as $index => $quantity)
+                                        @php
+                                            $percentage = $totalSold > 0 ? round(($quantity / $totalSold) * 100) : 0;
+                                            $productName = $topProductNames[$index] ?? 'Produk';
+                                        @endphp
+                                        <div class="text-center">
+                                            <div class="relative inline-flex items-center justify-center">
+                                                <svg class="transform -rotate-90 w-24 h-24">
+                                                    <circle cx="48" cy="48" r="40" stroke="#E5E7EB" stroke-width="8" fill="none" />
+                                                    <circle cx="48" cy="48" r="40" 
+                                                        stroke="{{ $index === 0 ? '#F97316' : '#EC4899' }}" 
+                                                        stroke-width="8" 
+                                                        fill="none"
+                                                        stroke-dasharray="{{ 2 * 3.14159 * 40 }}"
+                                                        stroke-dashoffset="{{ 2 * 3.14159 * 40 * (1 - $percentage / 100) }}"
+                                                        stroke-linecap="round" />
+                                                </svg>
+                                                <span class="absolute text-2xl font-bold {{ $index === 0 ? 'text-orange-600' : 'text-pink-600' }}">
+                                                    {{ $percentage }}%
+                                                </span>
+                                            </div>
+                                            <div class="mt-3">
+                                                <p class="text-xs font-semibold text-gray-700">{{ $index === 0 ? 'Terlaris' : 'Populer' }}</p>
+                                                <p class="text-xs text-gray-500 mt-1">{{ Str::limit($productName, 20) }}</p>
+                                                <p class="text-xs text-gray-400">{{ $quantity }} porsi terjual</p>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -289,7 +331,18 @@
                                     position: 'left',
                                     grid: { borderDash: [4, 4], color: '#F3F4F6' },
                                     beginAtZero: true,
-                                    title: { display: true, text: 'Order' }
+                                    title: { display: true, text: 'Jumlah Order' },
+                                    ticks: {
+                                        stepSize: 1,
+                                        precision: 0,
+                                        callback: function(value) {
+                                            // Hanya tampilkan bilangan bulat
+                                            if (Number.isInteger(value)) {
+                                                return value;
+                                            }
+                                            return null;
+                                        }
+                                    }
                                 },
                                 y1: {
                                     type: 'linear',
@@ -298,8 +351,13 @@
                                     grid: { display: false },
                                     beginAtZero: true,
                                     ticks: {
+                                        stepSize: 10000,
                                         callback: function(value) {
-                                            return 'Rp ' + (value/1000) + 'k';
+                                            // Format ke ribuan (K) untuk revenue
+                                            if (value >= 1000) {
+                                                return 'Rp ' + Math.floor(value/1000) + 'k';
+                                            }
+                                            return 'Rp ' + value;
                                         }
                                     }
                                 }
@@ -307,7 +365,7 @@
                         }
                     });
 
-                    // Top Selling Products Chart (Modern Horizontal Bar)
+                    // Top Selling Products Chart (Vertical Bar - Easier to Understand)
                     const topCtx = document.getElementById('topProductsChart');
                     if (!topCtx) {
                         console.error('topProductsChart canvas not found');
@@ -322,30 +380,42 @@
                                 label: 'Terjual (Porsi)',
                                 data: @json($topProductQuantities),
                                 backgroundColor: [
-                                    'rgba(249, 115, 22, 0.8)', // Orange
-                                    'rgba(251, 146, 60, 0.8)',
-                                    'rgba(253, 186, 116, 0.8)',
-                                    'rgba(254, 215, 170, 0.8)',
-                                    'rgba(255, 237, 213, 0.8)',
+                                    'rgba(249, 115, 22, 0.85)',  // Orange
+                                    'rgba(236, 72, 153, 0.85)',  // Pink
+                                    'rgba(20, 184, 166, 0.85)',  // Teal
+                                    'rgba(168, 85, 247, 0.85)',  // Purple
+                                    'rgba(234, 179, 8, 0.85)',   // Yellow
                                 ],
-                                borderRadius: 6,
-                                barThickness: 24,
+                                borderColor: [
+                                    'rgb(249, 115, 22)',   // Orange
+                                    'rgb(236, 72, 153)',   // Pink
+                                    'rgb(20, 184, 166)',   // Teal
+                                    'rgb(168, 85, 247)',   // Purple
+                                    'rgb(234, 179, 8)',    // Yellow
+                                ],
+                                borderWidth: 2,
+                                borderRadius: 8,
+                                barThickness: 50,
                             }]
                         },
                         options: {
-                            indexAxis: 'y', // Horizontal bar
+                            indexAxis: 'x', // Vertical bar (default)
                             responsive: true,
                             maintainAspectRatio: false,
                             plugins: {
                                 legend: { display: false },
                                 tooltip: {
-                                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
                                     titleColor: '#1F2937',
                                     bodyColor: '#4B5563',
-                                    borderColor: '#E5E7EB',
-                                    borderWidth: 1,
-                                    padding: 10,
+                                    borderColor: '#F97316',
+                                    borderWidth: 2,
+                                    padding: 12,
+                                    displayColors: false,
                                     callbacks: {
+                                        title: function(context) {
+                                            return context[0].label;
+                                        },
                                         label: function(context) {
                                             return context.raw + ' Porsi Terjual';
                                         }
@@ -354,11 +424,30 @@
                             },
                             scales: {
                                 x: {
-                                    grid: { borderDash: [4, 4], color: '#F3F4F6' },
-                                    beginAtZero: true
+                                    grid: { display: false },
+                                    ticks: {
+                                        font: { size: 11, weight: '500' },
+                                        color: '#6B7280'
+                                    }
                                 },
                                 y: {
-                                    grid: { display: false }
+                                    grid: { 
+                                        borderDash: [4, 4], 
+                                        color: '#F3F4F6' 
+                                    },
+                                    beginAtZero: true,
+                                    ticks: {
+                                        font: { size: 11 },
+                                        stepSize: 1,
+                                        precision: 0,
+                                        callback: function(value) {
+                                            // Hanya tampilkan bilangan bulat
+                                            if (Number.isInteger(value)) {
+                                                return value + ' porsi';
+                                            }
+                                            return null;
+                                        }
+                                    }
                                 }
                             }
                         }

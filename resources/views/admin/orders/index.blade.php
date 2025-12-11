@@ -29,7 +29,7 @@
                         <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Menunggu</option>
                         <option value="paid" {{ request('status') == 'paid' ? 'selected' : '' }}>Dibayar</option>
                         <option value="shipped" {{ request('status') == 'shipped' ? 'selected' : '' }}>Dikirim</option>
-                        <option value="done" {{ request('status') == 'done' ? 'selected' : '' }}>Selesai</option>
+                        <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Selesai</option>
                         <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
                     </select>
 
@@ -78,7 +78,7 @@
                             <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Menunggu</option>
                             <option value="paid" {{ request('status') == 'paid' ? 'selected' : '' }}>Dibayar</option>
                             <option value="shipped" {{ request('status') == 'shipped' ? 'selected' : '' }}>Dikirim</option>
-                            <option value="done" {{ request('status') == 'done' ? 'selected' : '' }}>Selesai</option>
+                            <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Selesai</option>
                             <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
                         </select>
                         <input type="date" id="date-filter-mobile" value="{{ request('date') }}"
@@ -101,12 +101,12 @@
                     <table class="min-w-full divide-y divide-gray-200 border border-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider border-b-2 border-gray-200">Order ID</th>
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider border-b-2 border-gray-200">Customer</th>
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider border-b-2 border-gray-200">Date</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider border-b-2 border-gray-200">ID Pesanan</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider border-b-2 border-gray-200">Pelanggan</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider border-b-2 border-gray-200">Tanggal</th>
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider border-b-2 border-gray-200">Total</th>
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider border-b-2 border-gray-200">Status</th>
-                                <th class="px-6 py-4 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider border-b-2 border-gray-200">Actions</th>
+                                <th class="px-6 py-4 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider border-b-2 border-gray-200">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
@@ -120,7 +120,7 @@
                                         <div class="text-xs text-gray-500">{{ $order->user->email }}</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ $order->created_at->format('M d, Y') }}
+                                        {{ $order->created_at->format('d M Y') }}
                                         <div class="text-xs text-gray-400">{{ $order->created_at->format('H:i') }}</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
@@ -130,38 +130,55 @@
                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
                                             @if($order->status === 'pending') bg-yellow-100 text-yellow-800
                                             @elseif($order->status === 'paid') bg-blue-100 text-blue-800
+                                            @elseif($order->status === 'processing') bg-indigo-100 text-indigo-800
                                             @elseif($order->status === 'shipped') bg-purple-100 text-purple-800
-                                            @elseif($order->status === 'done') bg-green-100 text-green-800
-                                            @else bg-red-100 text-red-800 @endif">
-                                            {{ ucfirst($order->status) }}
+                                            @elseif($order->status === 'completed') bg-green-100 text-green-800
+                                            @elseif($order->status === 'cancelled') bg-red-100 text-red-800
+                                            @else bg-gray-100 text-gray-800 @endif">
+                                            @if($order->status === 'pending') Menunggu
+                                            @elseif($order->status === 'paid') Dibayar
+                                            @elseif($order->status === 'processing') Diproses
+                                            @elseif($order->status === 'shipped') Dikirim
+                                            @elseif($order->status === 'completed') Selesai
+                                            @elseif($order->status === 'completed') Selesai
+                                            @elseif($order->status === 'cancelled') Dibatalkan
+                                            @else {{ ucfirst($order->status) }}
+                                            @endif
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <div class="flex justify-end space-x-2">
-                                            <a href="{{ route('admin.orders.show', $order) }}" class="text-gray-600 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-md transition-colors text-xs">View</a>
+                                            <a href="{{ route('admin.orders.show', $order) }}" class="text-gray-600 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-md transition-colors text-xs">Lihat</a>
                                             
                                             @if($order->status === 'pending')
                                                 <form method="POST" action="{{ route('admin.orders.update', $order) }}" class="inline">
                                                     @csrf
                                                     @method('PUT')
                                                     <input type="hidden" name="status" value="paid">
-                                                    <button type="submit" class="text-blue-600 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded-md transition-colors text-xs">Mark Paid</button>
+                                                    <button type="submit" class="text-blue-600 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded-md transition-colors text-xs">Tandai Dibayar</button>
                                                 </form>
                                             @elseif($order->status === 'paid')
                                                 <form method="POST" action="{{ route('admin.orders.update', $order) }}" class="inline">
                                                     @csrf
                                                     @method('PUT')
                                                     <input type="hidden" name="status" value="shipped">
-                                                    <button type="submit" class="text-purple-600 hover:text-purple-900 bg-purple-50 hover:bg-purple-100 px-3 py-1 rounded-md transition-colors text-xs">Ship</button>
+                                                    <button type="submit" class="text-purple-600 hover:text-purple-900 bg-purple-50 hover:bg-purple-100 px-3 py-1 rounded-md transition-colors text-xs">Kirim</button>
                                                 </form>
                                             @elseif($order->status === 'shipped')
                                                 <form method="POST" action="{{ route('admin.orders.update', $order) }}" class="inline">
                                                     @csrf
                                                     @method('PUT')
-                                                    <input type="hidden" name="status" value="done">
-                                                    <button type="submit" class="text-green-600 hover:text-green-900 bg-green-50 hover:bg-green-100 px-3 py-1 rounded-md transition-colors text-xs">Complete</button>
+                                                    <input type="hidden" name="status" value="completed">
+                                                    <button type="submit" class="text-green-600 hover:text-green-900 bg-green-50 hover:bg-green-100 px-3 py-1 rounded-md transition-colors text-xs">Selesaikan</button>
                                                 </form>
                                             @endif
+                                            
+                                            {{-- Delete Button --}}
+                                            <form method="POST" action="{{ route('admin.orders.destroy', $order) }}" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pesanan ini? Tindakan ini tidak dapat dibatalkan.');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-3 py-1 rounded-md transition-colors text-xs">Hapus</button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>
@@ -172,8 +189,8 @@
                                             <svg class="w-12 h-12 text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                                             </svg>
-                                            <p class="text-gray-500 text-lg font-medium">No orders found</p>
-                                            <p class="text-gray-400 text-sm">Try adjusting your filters</p>
+                                            <p class="text-gray-500 text-lg font-medium">Tidak ada pesanan ditemukan</p>
+                                            <p class="text-gray-400 text-sm">Coba sesuaikan filter Anda</p>
                                         </div>
                                     </td>
                                 </tr>

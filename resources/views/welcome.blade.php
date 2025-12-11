@@ -108,7 +108,7 @@
     </section>
 
     {{-- Featured Products Section --}}
-    <section id="featured" class="py-20 bg-slate-50">
+    <section id="featured" class="py-20 bg-white">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16">
                 <span class="inline-block bg-orange-100 text-orange-600 px-4 py-1.5 rounded-full text-sm font-bold mb-4 tracking-wide uppercase">Menu Spesial</span>
@@ -150,7 +150,7 @@
 
                         <div class="p-6 flex-1 flex flex-col">
                             <div class="flex justify-between items-start mb-2">
-                                <h3 class="text-xl font-bold text-slate-900 group-hover:text-orange-600 transition-colors line-clamp-1">
+                                <h3 class="text-xl font-bold text-slate-900 group-hover:text-orange-400 transition-colors line-clamp-1">
                                     {{ $product->name }}
                                 </h3>
                                 <div class="flex items-center gap-1">

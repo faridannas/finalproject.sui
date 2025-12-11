@@ -135,19 +135,19 @@ class DatabaseSeeder extends Seeder
         $banners = [
             [
                 'title' => 'Seblak Kuah Special',
-                'image' => 'banners/banner-seblak-kuah.jpg',
+                'image' => 'seblak-kuah.jpg',
                 'link' => '/products?category=1',
                 'description' => 'Nikmati kelezatan seblak kuah yang menghangatkan'
             ],
             [
                 'title' => 'Tantangan Level 5',
-                'image' => 'banners/banner-level5.jpg',
+                'image' => 'seblaklevel1.jpg',
                 'link' => '/products?category=7',
                 'description' => 'Berani coba seblak level 5? Khusus pemberani!'
             ],
             [
                 'title' => 'Seblak Seafood Premium',
-                'image' => 'banners/banner-seafood.jpg',
+                'image' => 'Seblakseafood.jpg',
                 'link' => '/products?seafood=true',
                 'description' => 'Seblak seafood dengan ingredients premium'
             ]

@@ -1,12 +1,7 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="lg:text-center">
-        <h1 class="text-base text-orange-600 font-semibold tracking-wide uppercase">Testimonials</h1>
-        <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-            What Our Customers Say
-        </p>
-        <p class="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
-            Read authentic reviews from our satisfied customers about their Seblak Umi AI experience.
-        </p>
+    <div class="text-center max-w-3xl mx-auto mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Apa Kata Pelanggan Kami</h2>
+        <p class="text-lg text-slate-700">Baca ulasan jujur dari pelanggan kami tentang pengalaman mereka menikmati Seblak Umi AI.</p>
     </div>
 
     <div class="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">

@@ -1,38 +1,14 @@
 <x-app-layout>
-    <style>
-        /* Ensure dropdown is always clickable */
-        nav {
-            position: relative;
-            z-index: 9999 !important;
-        }
-        nav * {
-            pointer-events: auto !important;
-        }
-        nav [x-data] {
-            position: relative;
-            z-index: 10000 !important;
-        }
-        nav [x-data] > div[x-show] {
-            position: absolute !important;
-            z-index: 99999 !important;
-            pointer-events: auto !important;
-        }
-    </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Force remove any overlays that might block the dropdown
-            const nav = document.querySelector('nav');
-            if (nav) {
-                nav.style.position = 'relative';
-                nav.style.zIndex = '9999';
-                
-                // Ensure all nav elements are clickable
-                nav.querySelectorAll('*').forEach(el => {
-                    el.style.pointerEvents = 'auto';
-                });
-            }
-        });
-    </script>
+    <!-- Custom Header for Payment -->
+    <div class="bg-gradient-to-r from-orange-500 to-red-600 pb-8 pt-6 shadow-lg rounded-b-[2rem] mb-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-4 text-white">
+            <a href="{{ route('orders.show', $order->id) }}" class="bg-white/20 p-2 rounded-xl hover:bg-white/30 transition-colors backdrop-blur-sm">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+            </a>
+            <h1 class="text-2xl font-bold">Pembayaran</h1>
+        </div>
+    </div>
+
     <div class="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             

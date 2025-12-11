@@ -23,6 +23,19 @@ class TransactionHistory extends Component
             ->get();
     }
 
+    public function deleteOrder($orderId)
+    {
+        $order = Order::where('user_id', Auth::id())->find($orderId);
+
+        if ($order) {
+            $order->delete();
+            $this->loadOrders(); // Refresh the list
+            session()->flash('success', 'Riwayat pesanan berhasil dihapus.');
+        } else {
+            session()->flash('error', 'Pesanan tidak ditemukan.');
+        }
+    }
+
     public function render()
     {
         return view('livewire.transaction-history');

@@ -5,10 +5,10 @@
                 <svg class="w-5 h-5 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                 </svg>
-                <span class="hidden sm:inline font-semibold">Back</span>
+                <span class="hidden sm:inline font-semibold">Kembali</span>
             </button>
             <h2 class="font-semibold text-lg sm:text-xl text-gray-800 leading-tight">
-                {{ __('Add New Promo') }}
+                {{ __('Tambah Promo Baru') }}
             </h2>
         </div>
     </x-slot>
@@ -26,8 +26,8 @@
                                 </svg>
                             </div>
                             <div>
-                                <h3 class="text-2xl font-bold text-gray-900">Create Promo Code</h3>
-                                <p class="text-sm text-gray-600 mt-1">Fill in the details to create a new promotional discount code</p>
+                                <h3 class="text-2xl font-bold text-gray-900">Buat Kode Promo</h3>
+                                <p class="text-sm text-gray-600 mt-1">Isi detail untuk membuat kode diskon promosi baru</p>
                             </div>
                         </div>
                     </div>
@@ -40,7 +40,7 @@
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
                                 </svg>
                                 <div class="flex-1">
-                                    <h4 class="text-sm font-semibold text-red-800 mb-1">Please fix the following errors:</h4>
+                                    <h4 class="text-sm font-semibold text-red-800 mb-1">Mohon perbaiki kesalahan berikut:</h4>
                                     <ul class="list-disc list-inside text-sm text-red-700 space-y-1">
                                         @foreach ($errors->all() as $error)
                                             <li>{{ $error }}</li>
@@ -58,7 +58,7 @@
                         {{-- Promo Code --}}
                         <div>
                             <label for="code" class="block text-sm font-semibold text-gray-700 mb-2">
-                                Promo Code <span class="text-red-500">*</span>
+                                Kode Promo <span class="text-red-500">*</span>
                             </label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -71,7 +71,7 @@
                                        id="code" 
                                        value="{{ old('code') }}"
                                        class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200 @error('code') border-red-500 @enderror"
-                                       placeholder="e.g., SEBLAK50, DISKON25"
+                                       placeholder="Contoh: SEBLAK50, DISKON25"
                                        required
                                        maxlength="255">
                             </div>
@@ -79,7 +79,7 @@
                                 <svg class="inline w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
                                 </svg>
-                                Use uppercase letters and numbers. Must be unique.
+                                Gunakan huruf besar dan angka. Harus unik.
                             </p>
                             @error('code')
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
@@ -89,7 +89,7 @@
                         {{-- Discount Percentage --}}
                         <div>
                             <label for="discount" class="block text-sm font-semibold text-gray-700 mb-2">
-                                Discount Percentage <span class="text-red-500">*</span>
+                                Persentase Diskon <span class="text-red-500">*</span>
                             </label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -114,7 +114,7 @@
                                 <svg class="inline w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
                                 </svg>
-                                Enter a value between 0 and 100
+                                Masukkan nilai antara 0 dan 100
                             </p>
                             @error('discount')
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
@@ -124,7 +124,7 @@
                         {{-- Valid Until --}}
                         <div>
                             <label for="valid_until" class="block text-sm font-semibold text-gray-700 mb-2">
-                                Valid Until <span class="text-red-500">*</span>
+                                Berlaku Sampai <span class="text-red-500">*</span>
                             </label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -144,7 +144,7 @@
                                 <svg class="inline w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
                                 </svg>
-                                Promo must be valid for at least tomorrow
+                                Promo harus berlaku minimal sampai besok
                             </p>
                             @error('valid_until')
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
@@ -158,21 +158,21 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                 </svg>
-                                Preview
+                                Pratinjau
                             </h4>
                             <div class="bg-white rounded-lg p-4 shadow-sm">
                                 <div class="flex items-center justify-between">
                                     <div>
-                                        <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Promo Code</p>
+                                        <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Kode Promo</p>
                                         <p class="text-lg font-bold text-gray-900" id="preview-code">-</p>
                                     </div>
                                     <div class="text-right">
-                                        <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Discount</p>
+                                        <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Diskon</p>
                                         <p class="text-2xl font-bold text-orange-600" id="preview-discount">0%</p>
                                     </div>
                                 </div>
                                 <div class="mt-3 pt-3 border-t border-gray-200">
-                                    <p class="text-xs text-gray-500">Valid until: <span class="font-semibold text-gray-700" id="preview-date">-</span></p>
+                                    <p class="text-xs text-gray-500">Berlaku sampai: <span class="font-semibold text-gray-700" id="preview-date">-</span></p>
                                 </div>
                             </div>
                         </div>
@@ -184,14 +184,14 @@
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                 </svg>
-                                Create Promo
+                                Buat Promo
                             </button>
                             <button type="button" onclick="window.history.back()" 
                                     class="flex-1 sm:flex-none inline-flex justify-center items-center px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-all duration-200">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                 </svg>
-                                Cancel
+                                Batal
                             </button>
                         </div>
                     </form>
@@ -204,32 +204,32 @@
                     <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
                     </svg>
-                    Tips for Creating Promo Codes
+                    Tips Membuat Kode Promo
                 </h4>
                 <ul class="space-y-2 text-sm text-blue-800">
                     <li class="flex items-start">
                         <svg class="w-4 h-4 mr-2 mt-0.5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                         </svg>
-                        Use memorable and easy-to-type codes (e.g., SEBLAK50, DISKON25)
+                        Gunakan kode yang mudah diingat dan diketik (contoh: SEBLAK50, DISKON25)
                     </li>
                     <li class="flex items-start">
                         <svg class="w-4 h-4 mr-2 mt-0.5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                         </svg>
-                        Set reasonable discount percentages (10-50% is common)
+                        Tetapkan persentase diskon yang wajar (10-50% adalah umum)
                     </li>
                     <li class="flex items-start">
                         <svg class="w-4 h-4 mr-2 mt-0.5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                         </svg>
-                        Choose appropriate expiry dates based on your promotion period
+                        Pilih tanggal kadaluarsa yang sesuai berdasarkan periode promosi Anda
                     </li>
                     <li class="flex items-start">
                         <svg class="w-4 h-4 mr-2 mt-0.5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                         </svg>
-                        Each promo code must be unique across the system
+                        Setiap kode promo harus unik di seluruh sistem
                     </li>
                 </ul>
             </div>

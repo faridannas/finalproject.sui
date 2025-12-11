@@ -128,25 +128,28 @@ class OrderController extends Controller
                 ->first();
 
             if ($promo) {
+                // Calculate discount amount
                 $discount = ($total * $promo->discount) / 100;
-                $total -= $discount;
             } else {
                 return redirect()->back()->with('error', 'Kode promo tidak valid atau sudah kadaluarsa.');
             }
         }
 
+        // Calculate final total after discount
+        $finalTotal = $total - $discount;
+
         try {
             $orderId = null;
 
-            DB::transaction(function () use ($request, $cartItems, $total, $discount, $promo, &$orderId) {
-                // Create order
+            DB::transaction(function () use ($request, $cartItems, $finalTotal, $discount, $promo, &$orderId) {
+                // Create order with final total (after discount)
                 $order = Order::create([
                     'user_id' => Auth::id(),
-                    'total_price' => $total,
+                    'total_price' => $finalTotal,  // This is the final amount user pays
                     'address' => $request->address,
                     'status' => 'pending',
                     'promo_code' => $promo ? $promo->code : null,
-                    'discount' => $discount,
+                    'discount' => $discount,  // This is the discount amount
                 ]);
 
                 $orderId = $order->id;
@@ -175,7 +178,7 @@ class OrderController extends Controller
                     'order_id' => $order->id,
                     'payment_method' => $paymentMethod,
                     'payment_status' => 'pending',
-                    'amount' => $total,
+                    'amount' => $finalTotal,  // Use final total after discount
                 ]);
 
                 // Clear cart
@@ -223,6 +226,36 @@ class OrderController extends Controller
     {
         $order = Order::with(['user', 'orderItems.product', 'payment'])->findOrFail($id);
         return view('admin.orders.show', compact('order'));
+    }
+
+    /**
+     * Remove the specified resource from storage (Admin).
+     */
+    public function adminDestroy(string $id)
+    {
+        $order = Order::with(['orderItems.product', 'payment'])->findOrFail($id);
+        
+        DB::beginTransaction();
+        try {
+            // Restore product stock if order is not cancelled
+            if ($order->status !== 'cancelled') {
+                foreach ($order->orderItems as $item) {
+                    if ($item->product) {
+                        $item->product->increment('stock', $item->quantity);
+                    }
+                }
+            }
+            
+            // Delete order (will cascade delete order items and payment)
+            $order->delete();
+            
+            DB::commit();
+            return redirect()->route('admin.orders.index')->with('success', 'Pesanan berhasil dihapus.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Admin Order Delete Error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus pesanan.');
+        }
     }
 
     /**
@@ -303,7 +336,7 @@ class OrderController extends Controller
         }
         
         // Only allow deletion of cancelled or done orders
-        if (!in_array($order->status, ['cancelled', 'done'])) {
+        if (!in_array($order->status, ['cancelled', 'completed'])) {
             return redirect()->back()->with('error', 'Hanya pesanan yang dibatalkan atau selesai yang bisa dihapus.');
         }
         

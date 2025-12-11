@@ -17,6 +17,18 @@ class PromoController extends Controller
     }
 
     /**
+     * Display active promos for public users
+     */
+    public function publicIndex()
+    {
+        $promos = Promo::where('valid_until', '>=', now())
+                       ->orderBy('created_at', 'desc')
+                       ->get();
+        return view('promos.index', compact('promos'));
+    }
+
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create()

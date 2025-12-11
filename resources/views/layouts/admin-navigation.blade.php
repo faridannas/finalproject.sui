@@ -20,7 +20,7 @@
 
                 <!-- Logo (Always Left, after hamburger on mobile) -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('admin.dashboard') }}" class="flex items-center space-x-2">
+                    <a href="{{ route('admin.dashboard') }}" wire:navigate class="flex items-center space-x-2">
                         @if($siteLogo)
                             <img src="{{ asset('storage/' . $siteLogo) }}" alt="{{ $siteName }} Logo" class="block h-10 w-auto object-contain rounded-lg">
                         @else
@@ -98,7 +98,7 @@
                         <!-- Notifications List -->
                         <div class="max-h-96 overflow-y-auto">
                             @forelse($pendingOrders as $order)
-                                <a href="{{ route('admin.orders.index') }}" class="block hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-0">
+                                <a href="{{ route('admin.orders.index') }}" wire:navigate class="block hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-0">
                                     <div class="px-4 py-3">
                                         <!-- Header: Name & Time -->
                                         <div class="flex items-center justify-between gap-3 mb-2">
@@ -158,7 +158,7 @@
                         <!-- Footer -->
                         @if($pendingCount > 5)
                             <div class="border-t border-gray-100">
-                                <a href="{{ route('admin.orders.index') }}" class="block px-4 py-3 text-center text-sm font-medium text-orange-600 hover:text-orange-700 hover:bg-orange-50 transition-colors">
+                                <a href="{{ route('admin.orders.index') }}" wire:navigate class="block px-4 py-3 text-center text-sm font-medium text-orange-600 hover:text-orange-700 hover:bg-orange-50 transition-colors">
                                     Lihat Semua Pesanan ({{ $pendingCount }}) →
                                 </a>
                             </div>
@@ -189,11 +189,9 @@
                             <!-- Authentication -->
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <x-dropdown-link :href="route('logout')"
-                                        onclick="event.preventDefault();
-                                                    this.closest('form').submit();" class="text-sm">
+                                <button type="submit" class="block w-full px-4 py-2 text-start text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
                                     {{ __('Log Out') }}
-                                </x-dropdown-link>
+                                </button>
                             </form>
                         </x-slot>
                     </x-dropdown>
@@ -251,11 +249,9 @@
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                    {{ __('Log Out') }}
-                </x-responsive-nav-link>
+                    <button type="submit" class="block w-full ps-3 pe-4 py-2 border-l-4 border-transparent text-start text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out">
+                        {{ __('Log Out') }}
+                    </button>
                 </form>
             </div>
         </div>

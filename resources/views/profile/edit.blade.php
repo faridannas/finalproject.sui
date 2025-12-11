@@ -84,28 +84,38 @@
                     <!-- Name -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
-                        <input type="text" name="name" value="{{ old('name', $user->name) }}" class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500 text-sm">
+                        <input type="text" name="name" value="{{ old('name', $user->name) }}" 
+                               style="border: 2px solid #d1d5db !important; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;" 
+                               class="w-full rounded-xl px-4 py-2.5">
                         @error('name') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <!-- Email -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                        <input type="email" name="email" value="{{ old('email', $user->email) }}" class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500 text-sm">
+                        <input type="email" name="email" value="{{ old('email', $user->email) }}" 
+                               style="border: 2px solid #d1d5db !important; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;" 
+                               class="w-full rounded-xl px-4 py-2.5">
                         @error('email') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <!-- Phone -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">No. Telepon</label>
-                        <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500 text-sm" placeholder="Contoh: 08123456789">
+                        <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" 
+                               style="border: 2px solid #d1d5db !important; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;" 
+                               class="w-full rounded-xl px-4 py-2.5" 
+                               placeholder="Contoh: 08123456789">
                         @error('phone') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <!-- Address -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
-                        <textarea name="address" rows="3" class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500 text-sm" placeholder="Alamat lengkap pengiriman">{{ old('address', $user->address) }}</textarea>
+                        <textarea name="address" rows="3" 
+                                  style="border: 2px solid #d1d5db !important; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;" 
+                                  class="w-full rounded-xl px-4 py-2.5" 
+                                  placeholder="Alamat lengkap pengiriman">{{ old('address', $user->address) }}</textarea>
                         @error('address') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
@@ -130,19 +140,25 @@
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Password Saat Ini</label>
-                        <input type="password" name="current_password" class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500 text-sm">
+                        <input type="password" name="current_password" 
+                               style="border: 2px solid #d1d5db !important; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;" 
+                               class="w-full rounded-xl px-4 py-2.5">
                         @error('current_password') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Password Baru</label>
-                        <input type="password" name="password" class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500 text-sm">
+                        <input type="password" name="password" 
+                               style="border: 2px solid #d1d5db !important; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;" 
+                               class="w-full rounded-xl px-4 py-2.5">
                         @error('password') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Konfirmasi Password Baru</label>
-                        <input type="password" name="password_confirmation" class="w-full rounded-lg border-gray-300 focus:border-orange-500 focus:ring-orange-500 text-sm">
+                        <input type="password" name="password_confirmation" 
+                               style="border: 2px solid #d1d5db !important; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;" 
+                               class="w-full rounded-xl px-4 py-2.5">
                     </div>
 
                     <div class="pt-2">

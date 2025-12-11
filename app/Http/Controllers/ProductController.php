@@ -12,9 +12,36 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with('category')->paginate(10);
+        $query = Product::with('category');
+
+        // Search filter
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('desc', 'like', "%{$search}%");
+            });
+        }
+
+        // Category filter
+        if ($request->filled('category')) {
+            $query->where('category_id', $request->category);
+        }
+
+        // Stock status filter
+        if ($request->filled('stock_status')) {
+            if ($request->stock_status === 'in_stock') {
+                $query->where('stock', '>', 10);
+            } elseif ($request->stock_status === 'out_of_stock') {
+                $query->where('stock', '=', 0);
+            } elseif ($request->stock_status === 'low_stock') {
+                $query->where('stock', '>', 0)->where('stock', '<=', 10);
+            }
+        }
+
+        $products = $query->paginate(10);
         return view('admin.products.index', compact('products'));
     }
 

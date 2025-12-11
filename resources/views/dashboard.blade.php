@@ -139,21 +139,61 @@
                 </div>
             </div>
 
-            <!-- 3. Promo Banner (Carousel Mockup) -->
-            <div class="relative rounded-2xl overflow-hidden shadow-lg group">
-                <img src="{{ asset('images/seblakpremium.webp') }}" class="w-full h-48 object-cover transform group-hover:scale-105 transition-transform duration-700" alt="Promo">
-                <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent flex items-center px-8">
-                    <div>
-                        <span class="bg-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded mb-2 inline-block uppercase tracking-wider animate-pulse">Promo Spesial</span>
-                        <h3 class="text-white text-2xl sm:text-3xl font-bold leading-tight mb-1">Gratis Ongkir!</h3>
-                        <p class="text-gray-200 text-sm mb-4">Untuk pembelian di atas Rp 50rb</p>
-                        <a href="{{ route('products.index') }}" class="bg-white text-orange-600 px-5 py-2 rounded-full text-sm font-bold hover:bg-orange-50 transition-colors inline-flex items-center gap-2 shadow-lg">
-                            Cek Menu Sekarang
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-                        </a>
+            <!-- 3. Promo Banner (Dynamic) -->
+            @if(isset($promos) && $promos->count() > 0)
+                <div class="space-y-6">
+                    <div class="flex items-center justify-between">
+                        <h4 class="font-bold text-gray-800 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
+                            Promo Spesial Untukmu
+                        </h4>
+                    </div>
+                    
+                    @foreach($promos as $promo)
+                        <div class="relative rounded-2xl overflow-hidden shadow-lg group">
+                            <img src="{{ asset('images/seblakpremium.webp') }}" class="w-full h-48 object-cover transform group-hover:scale-105 transition-transform duration-700" alt="Promo">
+                            <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent flex items-center px-8">
+                                <div class="w-full max-w-lg">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="bg-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider animate-pulse">Promo Terbatas</span>
+                                        <span class="text-gray-300 text-xs">Berlaku s/d {{ $promo->valid_until->format('d M Y') }}</span>
+                                    </div>
+                                    
+                                    <h3 class="text-white text-3xl sm:text-4xl font-bold leading-tight mb-2">Diskon {{ $promo->discount }}%</h3>
+                                    <p class="text-gray-300 text-sm mb-6 max-w-sm">Gunakan kode promo di bawah ini saat checkout untuk mendapatkan potongan harga spesial!</p>
+                                    
+                                    <div class="flex items-center gap-3">
+                                        <div class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg px-4 py-2 font-mono text-xl font-bold text-yellow-400 tracking-wider">
+                                            {{ $promo->code }}
+                                        </div>
+                                        <button onclick="navigator.clipboard.writeText('{{ $promo->code }}'); this.innerHTML = 'Tersalin!'; setTimeout(() => this.innerHTML = 'Salin Kode', 2000);" 
+                                                class="bg-white text-orange-600 px-6 py-2.5 rounded-xl text-sm font-bold hover:bg-orange-50 transition-all transform hover:scale-105 shadow-lg flex items-center gap-2">
+                                            Salin Kode
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <!-- Fallback Static Banner -->
+                <div class="relative rounded-2xl overflow-hidden shadow-lg group">
+                    <img src="{{ asset('images/seblakpremium.webp') }}" class="w-full h-48 object-cover transform group-hover:scale-105 transition-transform duration-700" alt="Promo">
+                    <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent flex items-center px-8">
+                        <div>
+                            <span class="bg-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded mb-2 inline-block uppercase tracking-wider animate-pulse">Promo Spesial</span>
+                            <h3 class="text-white text-2xl sm:text-3xl font-bold leading-tight mb-1">Gratis Ongkir!</h3>
+                            <p class="text-gray-200 text-sm mb-4">Untuk pembelian di atas Rp 50rb</p>
+                            <a href="{{ route('products.index') }}" class="bg-white text-orange-600 px-5 py-2 rounded-full text-sm font-bold hover:bg-orange-50 transition-colors inline-flex items-center gap-2 shadow-lg">
+                                Cek Menu Sekarang
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
+            @endif
 
             <!-- 5. Recent Orders (Simplified) -->
             <div class="bg-white rounded-2xl shadow-sm p-5">

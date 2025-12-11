@@ -75,14 +75,14 @@
                                                     @if($order->status == 'pending') bg-yellow-100 text-yellow-800
                                                     @elseif($order->status == 'paid') bg-green-100 text-green-800
                                                     @elseif($order->status == 'shipped') bg-blue-100 text-blue-800
-                                                    @elseif($order->status == 'done') bg-green-100 text-green-800
+                                                    @elseif($order->status == 'completed') bg-green-100 text-green-800
                                                     @elseif($order->status == 'cancelled') bg-red-100 text-red-800
                                                     @else bg-gray-100 text-gray-800
                                                     @endif">
                                                     @if($order->status == 'pending') Menunggu
                                                     @elseif($order->status == 'paid') Dibayar
                                                     @elseif($order->status == 'shipped') Dikirim
-                                                    @elseif($order->status == 'done') Selesai
+                                                    @elseif($order->status == 'completed') Selesai
                                                     @elseif($order->status == 'cancelled') Dibatalkan
                                                     @else {{ ucfirst($order->status) }}
                                                     @endif
@@ -90,20 +90,17 @@
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                 <div class="flex items-center gap-3">
-                                                    <a href="{{ route('orders.show', $order) }}" class="text-indigo-600 hover:text-indigo-900 transition-colors">
+                                                    <a href="{{ route('orders.show', $order) }}" class="text-indigo-600 hover:text-indigo-900 transition-colors font-medium">
                                                         Lihat Detail
                                                     </a>
                                                     
-                                                    @if(in_array($order->status, ['cancelled', 'done']))
-                                                        <form method="POST" action="{{ route('orders.destroy', $order) }}" class="inline" onsubmit="return confirm('Yakin mau hapus riwayat pesanan ini?');">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="text-red-600 hover:text-red-900 transition-colors flex items-center gap-1">
-                                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                                                Hapus
-                                                            </button>
-                                                        </form>
-                                                    @endif
+                                                    <form method="POST" action="{{ route('orders.destroy', $order) }}" class="inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="p-2 text-red-600 hover:text-red-900 hover:bg-red-50 rounded-lg transition-all duration-200" title="Hapus Riwayat">
+                                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                                        </button>
+                                                    </form>
                                                 </div>
                                             </td>
                                         </tr>

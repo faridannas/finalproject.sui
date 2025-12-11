@@ -139,40 +139,6 @@
                     @endif
                 </div>
             </div>
-
-            {{-- Info Card --}}
-            @if($banners->count() > 0)
-                <div class="mt-6 bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-xl p-6">
-                    <div class="flex items-start">
-                        <div class="flex-shrink-0">
-                            <svg class="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
-                            </svg>
-                        </div>
-                        <div class="ml-4 flex-1">
-                            <h4 class="text-sm font-semibold text-purple-900 mb-2">Banner Management Tips</h4>
-                            <ul class="space-y-1 text-sm text-purple-800">
-                                <li class="flex items-start">
-                                    <span class="mr-2">•</span>
-                                    <span>Banners are displayed on your homepage to promote products, sales, or announcements</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <span class="mr-2">•</span>
-                                    <span>Use high-quality images (1920x600px recommended) for best results</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <span class="mr-2">•</span>
-                                    <span>Add links to drive traffic to specific product pages or promotions</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <span class="mr-2">•</span>
-                                    <span>Keep file sizes under 2MB for faster page loading</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            @endif
         </div>
     </div>
 

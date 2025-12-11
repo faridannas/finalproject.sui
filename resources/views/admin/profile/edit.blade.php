@@ -57,12 +57,16 @@
                                 <div class="space-y-4">
                                     <div>
                                         <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
-                                        <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}" class="w-full rounded-xl border-gray-200 focus:border-orange-500 focus:ring focus:ring-orange-200 transition-all text-sm">
+                                        <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}" 
+                                               style="border: 2px solid #d1d5db !important;"
+                                               class="w-full rounded-xl border-2 border-gray-300 shadow-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:ring-opacity-50 transition-colors duration-200 px-4 py-2.5 text-sm">
                                         <x-input-error class="mt-1" :messages="$errors->get('name')" />
                                     </div>
                                     <div>
                                         <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-                                        <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}" class="w-full rounded-xl border-gray-200 focus:border-orange-500 focus:ring focus:ring-orange-200 transition-all text-sm">
+                                        <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}" 
+                                               style="border: 2px solid #d1d5db !important;"
+                                               class="w-full rounded-xl border-2 border-gray-300 shadow-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:ring-opacity-50 transition-colors duration-200 px-4 py-2.5 text-sm">
                                         <x-input-error class="mt-1" :messages="$errors->get('email')" />
                                     </div>
                                     <button type="submit" class="w-full bg-gray-900 hover:bg-gray-800 text-white font-medium py-2.5 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
@@ -87,17 +91,23 @@
                                 @method('put')
                                 <div>
                                     <label for="current_password" class="block text-sm font-medium text-gray-700 mb-1">Password Saat Ini</label>
-                                    <input type="password" name="current_password" id="current_password" class="w-full rounded-xl border-gray-200 focus:border-orange-500 focus:ring focus:ring-orange-200 transition-all text-sm">
+                                    <input type="password" name="current_password" id="current_password" 
+                                           style="border: 2px solid #d1d5db !important;"
+                                           class="w-full rounded-xl border-2 border-gray-300 shadow-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:ring-opacity-50 transition-colors duration-200 px-4 py-2.5 text-sm">
                                     <x-input-error :messages="$errors->get('current_password')" class="mt-1" />
                                 </div>
                                 <div>
                                     <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password Baru</label>
-                                    <input type="password" name="password" id="password" class="w-full rounded-xl border-gray-200 focus:border-orange-500 focus:ring focus:ring-orange-200 transition-all text-sm">
+                                    <input type="password" name="password" id="password" 
+                                           style="border: 2px solid #d1d5db !important;"
+                                           class="w-full rounded-xl border-2 border-gray-300 shadow-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:ring-opacity-50 transition-colors duration-200 px-4 py-2.5 text-sm">
                                     <x-input-error :messages="$errors->get('password')" class="mt-1" />
                                 </div>
                                 <div>
                                     <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">Konfirmasi Password</label>
-                                    <input type="password" name="password_confirmation" id="password_confirmation" class="w-full rounded-xl border-gray-200 focus:border-orange-500 focus:ring focus:ring-orange-200 transition-all text-sm">
+                                    <input type="password" name="password_confirmation" id="password_confirmation" 
+                                           style="border: 2px solid #d1d5db !important;"
+                                           class="w-full rounded-xl border-2 border-gray-300 shadow-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:ring-opacity-50 transition-colors duration-200 px-4 py-2.5 text-sm">
                                     <x-input-error :messages="$errors->get('password_confirmation')" class="mt-1" />
                                 </div>
                                 <button type="submit" class="w-full bg-white border-2 border-gray-200 hover:border-orange-500 hover:text-orange-600 text-gray-700 font-medium py-2.5 px-4 rounded-xl transition-all duration-200">
@@ -118,7 +128,7 @@
                                         <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                                         Pengaturan Website
                                     </h3>
-                                    <p class="text-sm text-gray-500 mt-1">Kustomisasi identitas dan tampilan website Anda</p>
+
                                 </div>
                                 <div class="hidden sm:block">
                                     <span class="inline-flex items-center justify-center p-3 bg-orange-50 rounded-xl text-orange-600">
@@ -137,13 +147,14 @@
                                     <!-- Site Name Section -->
                                     <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
                                         <label for="site_name" class="block text-lg font-semibold text-gray-900 mb-2">Nama Website</label>
-                                        <p class="text-sm text-gray-500 mb-4">Nama ini akan muncul di tab browser, footer, dan menu navigasi.</p>
+
                                         <div class="relative">
                                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                                 <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                             </div>
                                             <input type="text" name="site_name" id="site_name" value="{{ old('site_name', $site_name) }}" 
-                                                class="pl-10 block w-full rounded-xl border-gray-200 focus:border-orange-500 focus:ring focus:ring-orange-200 transition-all py-3 text-lg font-medium" 
+                                                style="border: 2px solid #d1d5db !important;"
+                                                class="pl-10 block w-full rounded-xl border-2 border-gray-300 shadow-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:ring-opacity-50 transition-colors duration-200 py-3 text-lg font-medium" 
                                                 placeholder="Contoh: Seblak UMI AI">
                                         </div>
                                         <x-input-error class="mt-2" :messages="$errors->get('site_name')" />
@@ -152,7 +163,7 @@
                                     <!-- Logo Section -->
                                     <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
                                         <label class="block text-lg font-semibold text-gray-900 mb-2">Logo Website</label>
-                                        <p class="text-sm text-gray-500 mb-4">Upload logo dengan format PNG (transparan) untuk hasil terbaik.</p>
+
                                         
                                         <div class="flex flex-col sm:flex-row items-center gap-6">
                                             <div class="flex-shrink-0">
@@ -204,4 +215,12 @@
             </div>
         </div>
     </div>
+
+    <!-- Fixed Back Button - Bottom Right -->
+    <button onclick="window.history.back()" class="fixed bottom-8 right-8 inline-flex items-center px-4 py-3 bg-gray-800 hover:bg-gray-900 text-white rounded-full shadow-lg transition-all duration-200 hover:scale-110 z-50">
+        <span class="font-semibold mr-2">Kembali</span>
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+        </svg>
+    </button>
 </x-admin-layout>

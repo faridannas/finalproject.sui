@@ -16,9 +16,10 @@
 
             {{-- Desktop Navigation --}}
             <nav class="hidden md:flex items-center space-x-1 bg-white/5 rounded-full px-2 py-1 border border-white/10 backdrop-blur-sm">
-                <a href="{{ route('welcome') }}" wire:navigate class="nav-link px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 hover:bg-orange-600 hover:text-white {{ request()->routeIs('welcome') ? 'bg-orange-600 text-white shadow-lg shadow-orange-600/30' : 'text-gray-300' }}">Home</a>
-                <a href="{{ route('products.index') }}" wire:navigate class="nav-link px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 hover:bg-orange-600 hover:text-white {{ request()->routeIs('products.*') ? 'bg-orange-600 text-white shadow-lg shadow-orange-600/30' : 'text-gray-300' }}">Menu</a>
-                <a href="{{ route('testimonials.index') }}" wire:navigate class="nav-link px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 hover:bg-orange-600 hover:text-white {{ request()->routeIs('testimonials.*') ? 'bg-orange-600 text-white shadow-lg shadow-orange-600/30' : 'text-gray-300' }}">Reviews</a>
+                <a href="{{ route('welcome') }}" wire:navigate class="nav-link px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 hover:text-orange-400 {{ request()->routeIs('welcome') ? 'bg-orange-600 text-white shadow-lg shadow-orange-600/30' : 'text-gray-300' }}">Home</a>
+                <a href="{{ route('products.index') }}" wire:navigate class="nav-link px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 hover:text-orange-400 {{ request()->routeIs('products.*') ? 'bg-orange-600 text-white shadow-lg shadow-orange-600/30' : 'text-gray-300' }}">Menu</a>
+                <a href="{{ route('promos.public') }}" wire:navigate class="nav-link px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 hover:text-orange-400 {{ request()->routeIs('promos.*') ? 'bg-orange-600 text-white shadow-lg shadow-orange-600/30' : 'text-gray-300' }}">Promo</a>
+                <a href="{{ route('testimonials.index') }}" wire:navigate class="nav-link px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 hover:text-orange-400 {{ request()->routeIs('testimonials.*') ? 'bg-orange-600 text-white shadow-lg shadow-orange-600/30' : 'text-gray-300' }}">Reviews</a>
             </nav>
 
             {{-- Desktop Auth & Cart --}}
@@ -48,8 +49,8 @@
                     </div>
                 @else
                     <div class="flex items-center space-x-3 pl-3 border-l border-white/10">
-                        <a href="{{ route('login') }}" class="text-gray-300 hover:text-white transition-colors text-sm font-medium px-2">Login</a>
-                        <a href="{{ route('register') }}" class="px-5 py-2 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white text-sm font-bold rounded-lg transition-all duration-300 shadow-lg shadow-orange-600/30 hover:shadow-orange-600/50 transform hover:-translate-y-0.5">Register</a>
+                        <a href="{{ route('login') }}" wire:navigate class="text-gray-300 hover:text-white transition-colors text-sm font-medium px-2">Login</a>
+                        <a href="{{ route('register') }}" wire:navigate class="px-5 py-2 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white text-sm font-bold rounded-lg transition-all duration-300 shadow-lg shadow-orange-600/30 hover:shadow-orange-600/50 transform hover:-translate-y-0.5">Register</a>
                     </div>
                 @endauth
             </div>
@@ -92,20 +93,26 @@
             </form>
 
             {{-- Navigation Links --}}
-            <nav class="grid grid-cols-3 gap-3">
-                <a href="{{ route('welcome') }}" wire:navigate class="flex flex-col items-center justify-center p-4 rounded-xl bg-white/5 hover:bg-orange-600/20 border border-white/5 hover:border-orange-500/30 transition-all group">
+            <nav class="grid grid-cols-4 gap-3">
+                <a href="{{ route('welcome') }}" class="flex flex-col items-center justify-center p-4 rounded-xl bg-white/5 hover:bg-orange-600/20 border border-white/5 hover:border-orange-500/30 transition-all group">
                     <svg class="w-6 h-6 text-gray-400 group-hover:text-orange-500 mb-2 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                     </svg>
                     <span class="text-sm font-medium text-gray-300 group-hover:text-white">Home</span>
                 </a>
-                <a href="{{ route('products.index') }}" wire:navigate class="flex flex-col items-center justify-center p-4 rounded-xl bg-white/5 hover:bg-orange-600/20 border border-white/5 hover:border-orange-500/30 transition-all group">
+                <a href="{{ route('products.index') }}" class="flex flex-col items-center justify-center p-4 rounded-xl bg-white/5 hover:bg-orange-600/20 border border-white/5 hover:border-orange-500/30 transition-all group">
                     <svg class="w-6 h-6 text-gray-400 group-hover:text-orange-500 mb-2 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                     </svg>
                     <span class="text-sm font-medium text-gray-300 group-hover:text-white">Menu</span>
                 </a>
-                <a href="{{ route('testimonials.index') }}" wire:navigate class="flex flex-col items-center justify-center p-4 rounded-xl bg-white/5 hover:bg-orange-600/20 border border-white/5 hover:border-orange-500/30 transition-all group">
+                <a href="{{ route('promos.public') }}" class="flex flex-col items-center justify-center p-4 rounded-xl bg-white/5 hover:bg-orange-600/20 border border-white/5 hover:border-orange-500/30 transition-all group">
+                    <svg class="w-6 h-6 text-gray-400 group-hover:text-orange-500 mb-2 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                    </svg>
+                    <span class="text-sm font-medium text-gray-300 group-hover:text-white">Promo</span>
+                </a>
+                <a href="{{ route('testimonials.index') }}" class="flex flex-col items-center justify-center p-4 rounded-xl bg-white/5 hover:bg-orange-600/20 border border-white/5 hover:border-orange-500/30 transition-all group">
                     <svg class="w-6 h-6 text-gray-400 group-hover:text-orange-500 mb-2 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
                     </svg>
@@ -133,10 +140,10 @@
                     </div>
                 @else
                     <div class="grid grid-cols-2 gap-4">
-                        <a href="{{ route('login') }}" class="flex items-center justify-center px-4 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-colors">
+                        <a href="{{ route('login') }}" wire:navigate class="flex items-center justify-center px-4 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-colors">
                             Login
                         </a>
-                        <a href="{{ route('register') }}" class="flex items-center justify-center px-4 py-3 rounded-xl bg-gradient-to-r from-orange-600 to-red-600 text-white font-bold shadow-lg shadow-orange-600/30 hover:shadow-orange-600/50 transition-all">
+                        <a href="{{ route('register') }}" wire:navigate class="flex items-center justify-center px-4 py-3 rounded-xl bg-gradient-to-r from-orange-600 to-red-600 text-white font-bold shadow-lg shadow-orange-600/30 hover:shadow-orange-600/50 transition-all">
                             Register
                         </a>
                     </div>

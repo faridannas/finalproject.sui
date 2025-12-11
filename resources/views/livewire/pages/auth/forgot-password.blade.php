@@ -6,7 +6,7 @@ use Livewire\Volt\Component;
 
 // Define layout explicitly
 use function Livewire\Volt\layout;
-layout('layouts.login-layout');
+layout('layouts.guest');
 
 use function Livewire\Volt\state;
 use function Livewire\Volt\rules;

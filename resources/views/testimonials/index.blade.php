@@ -18,7 +18,7 @@
     <x-guest-layout>
         <x-navbar :transparent="false" />
         
-        <div class="bg-gray-50 py-24">
+        <div class="bg-slate-50 py-24">
             @include('testimonials.partials.content')
         </div>
 

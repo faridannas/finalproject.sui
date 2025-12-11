@@ -24,8 +24,16 @@ Route::post('/logout', function () {
     Auth::logout();
     request()->session()->invalidate();
     request()->session()->regenerateToken();
-    return redirect('/login');
+    return redirect('/');
 })->name('logout');
+
+// Fallback GET route for logout (handles expired CSRF tokens)
+Route::get('/logout', function () {
+    Auth::logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect('/');
+});
 
 // Products Routes
 Route::get('/products', [PublicProductController::class, 'index'])->name('products.index');
@@ -34,6 +42,9 @@ Route::get('/products/{product}', [PublicProductController::class, 'show'])->nam
 // Categories Routes
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
 Route::get('/categories/{category}', [CategoryController::class, 'show'])->middleware(['auth'])->name('categories.show');
+
+// Promos Routes (Public)
+Route::get('/promos', [App\Http\Controllers\PromoController::class, 'publicIndex'])->name('promos.public');
 
 // Cart Routes (Livewire handled)
 Route::get('/cart', function () {
@@ -83,6 +94,7 @@ Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->prefix
     Route::get('/orders', [OrderController::class, 'adminIndex'])->name('orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'adminShow'])->name('orders.show');
     Route::put('/orders/{order}', [OrderController::class, 'update'])->name('orders.update');
+    Route::delete('/orders/{order}', [OrderController::class, 'adminDestroy'])->name('orders.destroy');
 
     // Categories Management
     Route::resource('categories', CategoryController::class);
@@ -117,17 +129,11 @@ Route::get('dashboard', [HomeController::class, 'dashboard'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-Route::get('profile', [\App\Http\Controllers\ProfileController::class, 'edit'])
-    ->middleware(['auth'])
-    ->name('profile.edit');
-
-Route::put('profile', [\App\Http\Controllers\ProfileController::class, 'update'])
-    ->middleware(['auth'])
-    ->name('profile.update');
-
-Route::put('profile/password', [\App\Http\Controllers\ProfileController::class, 'updatePassword'])
-    ->middleware(['auth'])
-    ->name('profile.password.update');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('profile', [\App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+    Route::put('profile/password', [\App\Http\Controllers\ProfileController::class, 'updatePassword'])->name('profile.password.update');
+});
 
 // Transaction History (Livewire)
 Route::get('/transaction-history', function () {
